@@ -66,6 +66,7 @@ export async function fetchStations(type) {
 
 export async function fetchMunicipalities(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
+	//TODO: retrieve only data that is relevant
 	return callTourismGet("/Municipality/", {
 			limit: -1,
 			select: "Plz,Id,Detail,Region,GpsInfo,Gpstype,Latitude,Longitude,Altitude",

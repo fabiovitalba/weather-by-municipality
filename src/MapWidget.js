@@ -144,7 +144,7 @@ export class MapWidget extends LitElement {
 
   addMunicipalitiesLayer(columns_layer_array) {
     this.municipalities.map(municipality => {
-      console.log('adding municipality',municipality)
+      //DEBUG: console.log('adding municipality',municipality)
 
       const pos = [
         municipality.Latitude,
