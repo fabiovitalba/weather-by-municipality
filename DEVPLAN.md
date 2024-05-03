@@ -26,7 +26,7 @@
 * Show weather forecast by municipality
 * Show Historic weather by municipality
 * Show Events by municipality
-* Show webcamps by municipality?
+* Show webcams by municipality?
 
 ## 5. Which APIs to use?
 TBD
