@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "3d752b90-f5c4-44fe-96b5-ed36fe420be8",
+		"name": "SSA-2023/24-OpenDataHubProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Municipalities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://tourism.api.opendatahub.com/v1/Municipality?pagenumber=1&pagesize=10&removenullvalues=false",
+					"protocol": "https",
+					"host": [
+						"tourism",
+						"api",
+						"opendatahub",
+						"com"
+					],
+					"path": [
+						"v1",
+						"Municipality"
+					],
+					"query": [
+						{
+							"key": "pagenumber",
+							"value": "1"
+						},
+						{
+							"key": "pagesize",
+							"value": "10"
+						},
+						{
+							"key": "removenullvalues",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Weather for Municipality",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://tourism.api.opendatahub.com/v1/Weather/District?locfilter=mun+413FBCB36CEB423A8F3BA3334CFC6B98&language=en",
+					"protocol": "https",
+					"host": [
+						"tourism",
+						"api",
+						"opendatahub",
+						"com"
+					],
+					"path": [
+						"v1",
+						"Weather",
+						"District"
+					],
+					"query": [
+						{
+							"key": "locfilter",
+							"value": "mun+413FBCB36CEB423A8F3BA3334CFC6B98"
+						},
+						{
+							"key": "language",
+							"value": "en"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Historical Weather at Lat/Lon",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://tourism.api.opendatahub.com/v1/WeatherHistory?pagenumber=1&latitude=46.994853&longitude=11.980325&radius=1&removenullvalues=false",
+					"protocol": "https",
+					"host": [
+						"tourism",
+						"api",
+						"opendatahub",
+						"com"
+					],
+					"path": [
+						"v1",
+						"WeatherHistory"
+					],
+					"query": [
+						{
+							"key": "pagenumber",
+							"value": "1"
+						},
+						{
+							"key": "latitude",
+							"value": "46.994853"
+						},
+						{
+							"key": "longitude",
+							"value": "11.980325"
+						},
+						{
+							"key": "radius",
+							"value": "1"
+						},
+						{
+							"key": "removenullvalues",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
