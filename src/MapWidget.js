@@ -5,7 +5,8 @@ import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
 import { getStyle, rainbow } from './utils.js';
-import { fetchStations, fetchMunicipalities } from './api/ninjaApi.js';
+import { fetchMunicipalities, fetchWeatherForecast } from './api/ninjaApi.js';
+//import { fetchStations, fetchMunicipalities } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
 
@@ -34,6 +35,7 @@ export class MapWidget extends LitElement {
     /* Data fetched from Open Data Hub */
     this.stations = [];
     this.municipalities = [];
+    this.forecast = [];
     this.stationTypes = {};
     this.colors = [
       "green",
@@ -43,8 +45,8 @@ export class MapWidget extends LitElement {
     ];
 
     /* Requests */
-    this.fetchStations = fetchStations.bind(this);
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
+    this.fetchWeatherForecast = fetchWeatherForecast.bind(this);
   }
 
   async initializeMap() {
@@ -61,56 +63,34 @@ export class MapWidget extends LitElement {
   }
 
   async drawMap() {
-    await this.fetchStations(this.propStationTypes);
     await this.fetchMunicipalities(1, 100);
+    //await this.fetchWeatherForecast(1, 100);
     let columns_layer_array = [];
+    let columns_layer_array2 = [];
 
-    //this.addStationsLayer(columns_layer_array);
     this.addMunicipalitiesLayer(columns_layer_array);
+    this.addWeatherForcast(columns_layer_array2);
   }
 
-  addStationsLayer(columns_layer_array) {
-    this.stations.map(station => {
-
-      if (!(station.stype in this.stationTypes)) {
-        let cnt = Object.keys(this.stationTypes).length;
-        this.stationTypes[station.stype] = rainbow(4000, Math.random() * 4000);
-      }
+  addMunicipalitiesLayer(columns_layer_array) {
+    this.municipalities.map(municipality => {
+      //DEBUG: console.log('adding municipality',municipality)
 
       const pos = [
-        station.scoordinate.y,
-        station.scoordinate.x
+        municipality.Latitude,
+        municipality.Longitude
       ];
 
-      let fillChar = station.pcode ? '#' : '&nbsp;';
+      let fillChar = municipality.Id ? 'M' : '&nbsp;';
 
       let icon = L.divIcon({
-        html: '<div class="marker"><div style="background-color: ' + this.stationTypes[station.stype] + '">' + fillChar + '</div></div>',
+        html: '<div class="marker"><div style="background-color: black;">' + fillChar + '</div></div>',
         iconSize: L.point(25, 25)
       });
 
-      let popupCont = '<div class="popup"><b>' + station.sname + '</b><br /><i>' + station.stype + '</i>';
+      let popupCont = '<div class="popup"><b>' + municipality.Plz + '</b><br /><i>' + municipality.Shortname + '</i>';
       popupCont += '<table>';
-      Object.keys(station.smetadata).forEach(key => {
-        let value = station.smetadata[key];
-        if (value) {
-          popupCont += '<tr>';
-          popupCont += '<td>' + key + '</td>';
-          if (value instanceof Object) {
-            let act_value = value[this.language];
-            if (typeof act_value === 'undefined') {
-              act_value = value[this.language_default];
-            }
-            if (typeof act_value === 'undefined') {
-              act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
-            }
-            popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
-          } else {
-            popupCont += '<td>' + value + '</td>';
-          }
-          popupCont += '</tr>';
-        }
-      });
+
       popupCont += '</table></div>';
 
       let popup = L.popup().setContent(popupCont);
@@ -122,7 +102,7 @@ export class MapWidget extends LitElement {
       columns_layer_array.push(marker);
     });
 
-    this.visibleStations = columns_layer_array.length;
+    this.visibleMunicipalities = columns_layer_array.length;
     let columns_layer = L.layerGroup(columns_layer_array, {});
 
     /** Prepare the cluster group for station markers */
@@ -142,47 +122,25 @@ export class MapWidget extends LitElement {
     this.map.addLayer(this.layer_columns);
   }
 
-  addMunicipalitiesLayer(columns_layer_array) {
-    this.municipalities.map(municipality => {
+  addWeatherForcast(columns_layer_array) {
+    this.forecast.map(forecast => {
       //DEBUG: console.log('adding municipality',municipality)
 
       const pos = [
-        municipality.Latitude,
-        municipality.Longitude
+        forecast.Latitude,
+        forecast.Longitude
       ];
 
-      let fillChar = municipality.Id ? '#' : '&nbsp;';
+      let fillChar = forecast.Id ? 'W' : '&nbsp;';
 
       let icon = L.divIcon({
-        html: '<div class="marker"><div style="background-color: green;">' + fillChar + '</div></div>',
+        html: '<div class="marker"><div style="background-color: blue;">' + fillChar + '</div></div>',
         iconSize: L.point(25, 25)
       });
 
-      let popupCont = '<div class="popup"><b>' + municipality.Plz + '</b><br /><i>' + municipality.Shortname + '</i>';
+      let popupCont = '<div class="popup"><b>' + forecast.Shortnamez + '</b><br /><i>' + forecast.Shortname + '</i>';
       popupCont += '<table>';
-      /*
-      //TODO: Add data relative to municipality
-      Object.keys(station.smetadata).forEach(key => {
-        let value = station.smetadata[key];
-        if (value) {
-          popupCont += '<tr>';
-          popupCont += '<td>' + key + '</td>';
-          if (value instanceof Object) {
-            let act_value = value[this.language];
-            if (typeof act_value === 'undefined') {
-              act_value = value[this.language_default];
-            }
-            if (typeof act_value === 'undefined') {
-              act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
-            }
-            popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
-          } else {
-            popupCont += '<td>' + value + '</td>';
-          }
-          popupCont += '</tr>';
-        }
-      });
-      */
+
       popupCont += '</table></div>';
 
       let popup = L.popup().setContent(popupCont);
@@ -194,7 +152,7 @@ export class MapWidget extends LitElement {
       columns_layer_array.push(marker);
     });
 
-    this.visibleMunicipalities = columns_layer_array.length;
+    this.visibleForecast = columns_layer_array.length;
     let columns_layer = L.layerGroup(columns_layer_array, {});
 
     /** Prepare the cluster group for station markers */
