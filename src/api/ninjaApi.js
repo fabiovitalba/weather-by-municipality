@@ -62,3 +62,44 @@ export async function fetchWeatherForecast(pageNumber, pageSize) {
 		throw e;
 	});
 }
+
+/*export async function fetchWeatherForecast(pageNumber, pageSize) {
+    console.log(pageNumber, pageSize);
+    // Verwenden korrekter Parameter für Paging und spezifische Auswahl
+    return callTourismGet("/Forecast/", {
+        limit: pageSize,  // Verwendung von pageSize statt -1
+        offset: (pageNumber - 1) * pageSize, // Berechnet den Offset basierend auf der Seitennummer
+        select: "Shortname,Latitude,Longitude,Altitude,ForeCastDaily,Forecast3HoursInterval",
+        where: "odhactive.eq.true,active.eq.true",
+        distinct: true,
+        origin: config.ORIGIN
+    })
+    .then(response => {
+        this.forecast = response;
+        return response; // Geben Sie die Antwort zurück, falls weitere Verarbeitung erforderlich ist
+    })
+    .catch(e => {
+        console.log(e);
+        throw e;
+    });
+}
+
+export async function fetchWeatherForecast(pageNumber, pageSize) {
+    console.log(pageNumber, pageSize);
+    // Anpassung der Parameter gemäß der API-Dokumentation
+    return callTourismGet("/Forecast/", {
+        pagenumber: pageNumber, // korrekter Parameter für die Seitennummer
+        pagesize: pageSize,     // korrekter Parameter für die Seitengröße
+        locfilter: '',          // optional, setze einen Wert, wenn nötig
+        language: 'en',         // Setzt die Sprache, wenn nötig
+        fields: ['Shortname', 'Latitude', 'Longitude', 'Altitude'], // Felder, die zurückgegeben werden sollen
+    })
+    .then(response => {
+        this.forecast = response;
+        return response; // Geben Sie die Antwort zurück, falls weitere Verarbeitung erforderlich ist
+    })
+    .catch(e => {
+        console.log(e);
+        throw e;
+    });
+}*/
