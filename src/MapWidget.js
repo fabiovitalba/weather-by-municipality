@@ -106,10 +106,12 @@ export class MapWidget extends LitElement {
 
       /**  Popup Window Content  **/
       let popupCont = '<div class="popup"><h3>' + municipality.Plz + ' ' + municipality.Shortname + '</h3>';
+      popupCont += '<h4>Weather Forecast</h4>'
       popupCont += '<table>';
       municipality.weatherForecast.forEach(ForeCastDaily => {
         popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
       })
+      popupCont += '</table>';
       /*
       //TODO: Add data relative to municipality
       Object.keys(station.smetadata).forEach(key => {
@@ -133,7 +135,7 @@ export class MapWidget extends LitElement {
         }
       });
       */
-      popupCont += '</table></div>';
+      popupCont += '</div>';
 
       let popup = L.popup().setContent(popupCont);
 
