@@ -47,15 +47,15 @@ export async function fetchMunicipalities(pageNumber, pageSize) {
 export async function fetchWeatherForecast(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
 	//TODO: retrieve only data that is relevant
-	return callTourismGet("/Forecast/", {
+	return callTourismGet("/Weather/Forecast/", {
 		limit: -1,
-		select: "Shortname,Latitude,Longitude,Altitude",
+		select: "",
 		where: "odhactive.eq.true,active.eq.true",
 		distinct: true,
 		origin: config.ORIGIN
 	})
 	.then(response => {
-		this.forecast = response;
+		this.weatherForecasts = response;
 	})
 	.catch(e => {
 		console.log(e)

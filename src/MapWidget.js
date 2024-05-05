@@ -35,7 +35,7 @@ export class MapWidget extends LitElement {
     /* Data fetched from Open Data Hub */
     this.stations = [];
     this.municipalities = [];
-    this.forecast = [];
+    this.weatherForecasts = [];
     this.stationTypes = {};
     this.colors = [
       "green",
@@ -64,12 +64,31 @@ export class MapWidget extends LitElement {
 
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
-    //await this.fetchWeatherForecast(1, 100);
-    let columns_layer_array = [];
-    let columns_layer_array2 = [];
+    await this.fetchWeatherForecast(1, 100);
+    this.addWeatherForecastToMunicipality();
 
+    let columns_layer_array = [];
+    
     this.addMunicipalitiesLayer(columns_layer_array);
-    this.addWeatherForcast(columns_layer_array2);
+  }
+
+  addWeatherForecastToMunicipality() {
+    console.log('###DEBUG: this.weatherForecasts',this.weatherForecasts);
+    this.municipalities = this.municipalities.map(municipality => {
+      let weatherForecast = [];
+
+      let apiWeatherForecast = this.weatherForecasts.filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id);
+      console.log('###DEBUG: municipality',municipality);
+      console.log('###DEBUG: apiWeatherForecast',apiWeatherForecast);
+      if ((apiWeatherForecast !== undefined) && (apiWeatherForecast[0] !== undefined)) {
+        weatherForecast = apiWeatherForecast[0].ForeCastDaily;
+      }
+
+      return {
+        ...municipality,
+        weatherForecast: weatherForecast,
+      }
+    })
   }
 
   addMunicipalitiesLayer(columns_layer_array) {
@@ -88,9 +107,12 @@ export class MapWidget extends LitElement {
         iconSize: L.point(25, 25)
       });
 
+      /**  Popup Window Content  **/
       let popupCont = '<div class="popup"><b>' + municipality.Plz + '</b><br /><i>' + municipality.Shortname + '</i>';
       popupCont += '<table>';
-
+      municipality.weatherForecast.forEach(ForeCastDaily => {
+        popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
+      })
       popupCont += '</table></div>';
 
       let popup = L.popup().setContent(popupCont);
@@ -122,55 +144,55 @@ export class MapWidget extends LitElement {
     this.map.addLayer(this.layer_columns);
   }
 
-  addWeatherForcast(columns_layer_array) {
-    this.forecast.map(forecast => {
-      //DEBUG: console.log('adding municipality',municipality)
+  // addWeatherForcast(columns_layer_array) {
+  //   this.weatherForecasts.map(forecast => {
+  //     //DEBUG: console.log('adding municipality',municipality)
 
-      const pos = [
-        forecast.Latitude,
-        forecast.Longitude
-      ];
+  //     const pos = [
+  //       forecast.Latitude,
+  //       forecast.Longitude
+  //     ];
 
-      let fillChar = forecast.Id ? 'W' : '&nbsp;';
+  //     let fillChar = forecast.Id ? 'W' : '&nbsp;';
 
-      let icon = L.divIcon({
-        html: '<div class="marker"><div style="background-color: blue;">' + fillChar + '</div></div>',
-        iconSize: L.point(25, 25)
-      });
+  //     let icon = L.divIcon({
+  //       html: '<div class="marker"><div style="background-color: blue;">' + fillChar + '</div></div>',
+  //       iconSize: L.point(25, 25)
+  //     });
 
-      let popupCont = '<div class="popup"><b>' + forecast.Shortnamez + '</b><br /><i>' + forecast.Shortname + '</i>';
-      popupCont += '<table>';
+  //     let popupCont = '<div class="popup"><b>' + forecast.Shortnamez + '</b><br /><i>' + forecast.Shortname + '</i>';
+  //     popupCont += '<table>';
 
-      popupCont += '</table></div>';
+  //     popupCont += '</table></div>';
 
-      let popup = L.popup().setContent(popupCont);
+  //     let popup = L.popup().setContent(popupCont);
 
-      let marker = L.marker(pos, {
-        icon: icon,
-      }).bindPopup(popup);
+  //     let marker = L.marker(pos, {
+  //       icon: icon,
+  //     }).bindPopup(popup);
 
-      columns_layer_array.push(marker);
-    });
+  //     columns_layer_array.push(marker);
+  //   });
 
-    this.visibleForecast = columns_layer_array.length;
-    let columns_layer = L.layerGroup(columns_layer_array, {});
+  //   this.visibleForecast = columns_layer_array.length;
+  //   let columns_layer = L.layerGroup(columns_layer_array, {});
 
-    /** Prepare the cluster group for station markers */
-    this.layer_columns = new L.MarkerClusterGroup({
-      showCoverageOnHover: false,
-      chunkedLoading: true,
-      iconCreateFunction: function (cluster) {
-        return L.divIcon({
-          html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
-          iconSize: L.point(36, 36)
-        });
-      }
-    });
-    /** Add maker layer in the cluster group */
-    this.layer_columns.addLayer(columns_layer);
-    /** Add the cluster group to the map */
-    this.map.addLayer(this.layer_columns);
-  }
+  //   /** Prepare the cluster group for station markers */
+  //   this.layer_columns = new L.MarkerClusterGroup({
+  //     showCoverageOnHover: false,
+  //     chunkedLoading: true,
+  //     iconCreateFunction: function (cluster) {
+  //       return L.divIcon({
+  //         html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+  //         iconSize: L.point(36, 36)
+  //       });
+  //     }
+  //   });
+  //   /** Add maker layer in the cluster group */
+  //   this.layer_columns.addLayer(columns_layer);
+  //   /** Add the cluster group to the map */
+  //   this.map.addLayer(this.layer_columns);
+  // }
 
   async firstUpdated() {
     this.initializeMap();
