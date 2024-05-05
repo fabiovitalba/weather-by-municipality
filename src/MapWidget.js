@@ -9,6 +9,7 @@ import { fetchMunicipalities, fetchWeatherForecast } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
 
+  /*
   static get properties() {
     return {
       propStationTypes: {
@@ -17,6 +18,7 @@ export class MapWidget extends LitElement {
       },
     };
   }
+  */
 
   constructor() {
     super();
@@ -32,11 +34,9 @@ export class MapWidget extends LitElement {
     this.language = 'de';
 
     /* Data fetched from Open Data Hub */
-    this.stations = [];
     this.municipalities = [];
     this.weatherForecasts = [];
 
-    this.stationTypes = {};
     this.colors = [
       "green",
       "blue",
@@ -80,7 +80,7 @@ export class MapWidget extends LitElement {
       //console.log('###DEBUG: municipality',municipality);
       //console.log('###DEBUG: apiWeatherForecast',apiWeatherForecast);
       if ((apiWeatherForecast !== undefined) && (apiWeatherForecast[0] !== undefined)) {
-        weatherForecast = apiWeatherForecast[0].ForeCastDaily;
+        weatherForecast = apiWeatherForecast[0].ForeCastDaily.filter(dailyForecast => dailyForecast.WeatherDesc !== null);
       }
 
       return {
@@ -105,7 +105,7 @@ export class MapWidget extends LitElement {
       });
 
       /**  Popup Window Content  **/
-      let popupCont = '<div class="popup"><b>' + municipality.Plz + '</b><i>' + municipality.Shortname + '</i>';
+      let popupCont = '<div class="popup"><h3>' + municipality.Plz + ' ' + municipality.Shortname + '</h3>';
       popupCont += '<table>';
       municipality.weatherForecast.forEach(ForeCastDaily => {
         popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
@@ -147,7 +147,7 @@ export class MapWidget extends LitElement {
     this.visibleMunicipalities = columns_layer_array.length;
     let columns_layer = L.layerGroup(columns_layer_array, {});
 
-    /** Prepare the cluster group for station markers */
+    /** Prepare the cluster group for municipality markers */
     this.layer_columns = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       chunkedLoading: true,
