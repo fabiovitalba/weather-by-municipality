@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "3d752b90-f5c4-44fe-96b5-ed36fe420be8",
+		"name": "SSA-2023/24-OpenDataHubProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Weather",
+			"item": [
+				{
+					"name": "Get Weather for Municipality",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/Weather/District?locfilter=mun{{MunicipalityId}}&language={{Language}}",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"Weather",
+								"District"
+							],
+							"query": [
+								{
+									"key": "locfilter",
+									"value": "mun{{MunicipalityId}}"
+								},
+								{
+									"key": "language",
+									"value": "{{Language}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Weather Forecast for Municipality",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/Weather/Forecast?locfilter=mun{{MunicipalityId}}&language={{Language}}",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"Weather",
+								"Forecast"
+							],
+							"query": [
+								{
+									"key": "locfilter",
+									"value": "mun{{MunicipalityId}}"
+								},
+								{
+									"key": "language",
+									"value": "{{Language}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Webcams for Lat/Lon",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/WebcamInfo?pagenumber=1&pagesize=10&active=true&odhactive=true&latitude={{MunicipalityLatitude}}&longitude={{MunicipalityLongitude}}&radius={{SearchRadiusInMeters}}&updatefrom=2024-05-01&removenullvalues=false",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"WebcamInfo"
+							],
+							"query": [
+								{
+									"key": "pagenumber",
+									"value": "1"
+								},
+								{
+									"key": "pagesize",
+									"value": "10"
+								},
+								{
+									"key": "active",
+									"value": "true"
+								},
+								{
+									"key": "odhactive",
+									"value": "true"
+								},
+								{
+									"key": "latitude",
+									"value": "{{MunicipalityLatitude}}"
+								},
+								{
+									"key": "longitude",
+									"value": "{{MunicipalityLongitude}}"
+								},
+								{
+									"key": "radius",
+									"value": "{{SearchRadiusInMeters}}"
+								},
+								{
+									"key": "updatefrom",
+									"value": "2024-05-01"
+								},
+								{
+									"key": "removenullvalues",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Historical Weather for Lat/Lon",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/WeatherHistory?pagenumber=1&latitude={{MunicipalityLatitude}}&longitude={{MunicipalityLongitude}}&radius={{SearchRadiusInMeters}}&removenullvalues=false&locfilter=mun{{MunicipalityId}}&datefrom=2024-04-01&dateto=2024-04-03",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"WeatherHistory"
+							],
+							"query": [
+								{
+									"key": "pagenumber",
+									"value": "1"
+								},
+								{
+									"key": "latitude",
+									"value": "{{MunicipalityLatitude}}"
+								},
+								{
+									"key": "longitude",
+									"value": "{{MunicipalityLongitude}}"
+								},
+								{
+									"key": "radius",
+									"value": "{{SearchRadiusInMeters}}"
+								},
+								{
+									"key": "removenullvalues",
+									"value": "false"
+								},
+								{
+									"key": "locfilter",
+									"value": "mun{{MunicipalityId}}"
+								},
+								{
+									"key": "datefrom",
+									"value": "2024-04-01"
+								},
+								{
+									"key": "dateto",
+									"value": "2024-04-03"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WIP - Get Weather (Real Time) for Lat/Long - DOES NOT RETURN EXPECTED VALUES",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/Weather/Realtime?latitude={{MunicipalityLatitude}}&longitude={{MunicipalityLongitude}}&radius={{SearchRadiusInMeters}}&language={{Language}}",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"Weather",
+								"Realtime"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "{{MunicipalityLatitude}}"
+								},
+								{
+									"key": "longitude",
+									"value": "{{MunicipalityLongitude}}"
+								},
+								{
+									"key": "radius",
+									"value": "{{SearchRadiusInMeters}}"
+								},
+								{
+									"key": "language",
+									"value": "{{Language}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/Event?pagenumber=1&locfilter=mun{{MunicipalityId}}&begindate=2024-05-03&enddate=2024-12-31&langfilter={{Language}}&removenullvalues=false",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"Event"
+							],
+							"query": [
+								{
+									"key": "pagenumber",
+									"value": "1"
+								},
+								{
+									"key": "locfilter",
+									"value": "mun{{MunicipalityId}}"
+								},
+								{
+									"key": "active",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "odhactive",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "begindate",
+									"value": "2024-05-03"
+								},
+								{
+									"key": "enddate",
+									"value": "2024-12-31"
+								},
+								{
+									"key": "sort",
+									"value": "upcoming",
+									"disabled": true
+								},
+								{
+									"key": "langfilter",
+									"value": "{{Language}}"
+								},
+								{
+									"key": "removenullvalues",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Municipalities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{TurismBaseUrl}}/v1/Municipality?pagenumber=1&pagesize=10&removenullvalues=false",
+					"host": [
+						"{{TurismBaseUrl}}"
+					],
+					"path": [
+						"v1",
+						"Municipality"
+					],
+					"query": [
+						{
+							"key": "pagenumber",
+							"value": "1"
+						},
+						{
+							"key": "pagesize",
+							"value": "10"
+						},
+						{
+							"key": "removenullvalues",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TurismBaseUrl",
+			"value": "https://tourism.api.opendatahub.com",
+			"type": "string"
+		},
+		{
+			"key": "MunicipalityId",
+			"value": "413FBCB36CEB423A8F3BA3334CFC6B98",
+			"type": "string"
+		},
+		{
+			"key": "Language",
+			"value": "en"
+		},
+		{
+			"key": "MunicipalityLatitude",
+			"value": "46.994853",
+			"type": "string"
+		},
+		{
+			"key": "MunicipalityLongitude",
+			"value": "11.980325",
+			"type": "string"
+		},
+		{
+			"key": "SearchRadiusInMeters",
+			"value": "1000"
+		}
+	]
+}
