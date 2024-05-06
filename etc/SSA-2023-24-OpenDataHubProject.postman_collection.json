@@ -43,7 +43,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{TurismBaseUrl}}/v1/Weather/Forecast?locfilter=mun{{MunicipalityId}}&language={{Language}}",
+							"raw": "{{TurismBaseUrl}}/v1/Weather/Forecast?language={{Language}}",
 							"host": [
 								"{{TurismBaseUrl}}"
 							],
@@ -55,7 +55,8 @@
 							"query": [
 								{
 									"key": "locfilter",
-									"value": "mun{{MunicipalityId}}"
+									"value": "mun{{MunicipalityId}}",
+									"disabled": true
 								},
 								{
 									"key": "language",
@@ -269,6 +270,110 @@
 								{
 									"key": "removenullvalues",
 									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Area",
+			"item": [
+				{
+					"name": "Get Hiking Trails",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/ODHActivityPoi?pagenumber=1&locfilter=mun{{MunicipalityId}}&type=6&activitytype=16",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"ODHActivityPoi"
+							],
+							"query": [
+								{
+									"key": "pagenumber",
+									"value": "1"
+								},
+								{
+									"key": "locfilter",
+									"value": "mun{{MunicipalityId}}"
+								},
+								{
+									"key": "type",
+									"value": "6",
+									"description": "2 = Winter + 4 = Summer"
+								},
+								{
+									"key": "activitytype",
+									"value": "16",
+									"description": "Hiking"
+								},
+								{
+									"key": "langfilter",
+									"value": "de,it,en,nl,sc,pl,fr,ru",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WIP - Get Experience Areas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TurismBaseUrl}}/v1/ExperienceArea?pagenumber=1&gen_latitude={{MunicipalityLatitude}}&longitude={{MunicipalityLongitude}}&radius={{SearchRadiusInMeters}}",
+							"host": [
+								"{{TurismBaseUrl}}"
+							],
+							"path": [
+								"v1",
+								"ExperienceArea"
+							],
+							"query": [
+								{
+									"key": "pagenumber",
+									"value": "1"
+								},
+								{
+									"key": "gen_latitude",
+									"value": "{{MunicipalityLatitude}}"
+								},
+								{
+									"key": "longitude",
+									"value": "{{MunicipalityLongitude}}"
+								},
+								{
+									"key": "radius",
+									"value": "{{SearchRadiusInMeters}}"
+								},
+								{
+									"key": "removenullvalues",
+									"value": "false",
+									"disabled": true
+								},
+								{
+									"key": "locfilter",
+									"value": "mun{{MunicipalityId}}",
+									"disabled": true
+								},
+								{
+									"key": "datefrom",
+									"value": "2024-04-01",
+									"disabled": true
+								},
+								{
+									"key": "dateto",
+									"value": "2024-04-03",
+									"disabled": true
 								}
 							]
 						}

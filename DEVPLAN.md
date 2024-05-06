@@ -29,5 +29,16 @@
 * Show webcams by municipality?
 
 ## 5. Which APIs to use?
-TBD
-* 
+The APIs we use are defined under the postman collection.
+It can be found in `/etc/SSA-2023-24-OpenDataHubProject.postman_collection.json`.
+
+## 6. Questions for OpenDataHub people
+- How are components added to the store? How long does it take for a proposal to be added to the store?
+- What are the requirements for a component to be added to the store?
+- What values/settings should be parametrized?
+- Can we use ninjaApi for the tourism API calls? If not, are there other ways to reduce the amount of data that is returned by the API?
+
+## 7. Questions for Prof.
+- What are the requirements for the assignments?
+- Do we need to implement a minimum of concepts seen during the course? Anyhting else?
+
