@@ -96,60 +96,54 @@ export class MapWidget extends LitElement {
         municipality.Latitude,
         municipality.Longitude
       ];
-
+  
       let fillChar = municipality.Id ? 'M' : '&nbsp;';
-
+  
       let icon = L.divIcon({
         html: '<div class="marker"><div style="background-color: black;">' + fillChar + '</div></div>',
         iconSize: L.point(25, 25)
       });
-
-      /**  Popup Window Content  **/
-      let popupCont = '<div class="popup"><h3>' + municipality.Plz + ' ' + municipality.Shortname + '</h3>';
-      popupCont += '<h4>Weather Forecast</h4>'
-      popupCont += '<table>';
+  
+      /** Popup Window Content **/
+      let popupCont = `
+      <div class="popup">
+        <div class="popup-header">
+          <h3>${municipality.Plz} ${municipality.Shortname}</h3>
+        </div>
+        <div class="popup-body">
+          <div class="tabs">
+            <button class="tablinks" data-tab="Weather">Weather</button>
+            <button class="tablinks" data-tab="Details">Details</button>
+          </div>
+          <div id="Weather" class="tabcontent" style="display: block;">
+            <h4>Weather Forecast</h4>
+            <table>`;
       municipality.weatherForecast.forEach(ForeCastDaily => {
-        popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
-      })
-      popupCont += '</table>';
-      /*
-      //TODO: Add data relative to municipality
-      Object.keys(station.smetadata).forEach(key => {
-        let value = station.smetadata[key];
-        if (value) {
-          popupCont += '<tr>';
-          popupCont += '<td>' + key + '</td>';
-          if (value instanceof Object) {
-            let act_value = value[this.language];
-            if (typeof act_value === 'undefined') {
-              act_value = value[this.language_default];
-            }
-            if (typeof act_value === 'undefined') {
-              act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
-            }
-            popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
-          } else {
-            popupCont += '<td>' + value + '</td>';
-          }
-          popupCont += '</tr>';
-        }
+          popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
       });
-      */
-      popupCont += '</div>';
-
+      popupCont += `</table>
+          </div>
+          <div id="Details" class="tabcontent" style="display: none;">
+            <h4>Details</h4>
+            <p>More details here...</p>
+          </div>
+        </div>
+      </div>`;
+      
       let popup = L.popup().setContent(popupCont);
-
+      
+  
       let marker = L.marker(pos, {
         icon: icon,
       }).bindPopup(popup);
-
+  
       columns_layer_array.push(marker);
     });
-
+  
+    // Store the number of visible municipalities
     this.visibleMunicipalities = columns_layer_array.length;
-    let columns_layer = L.layerGroup(columns_layer_array, {});
-
-    /** Prepare the cluster group for municipality markers */
+  
+    let columns_layer = L.layerGroup(columns_layer_array);
     this.layer_columns = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       chunkedLoading: true,
@@ -160,15 +154,26 @@ export class MapWidget extends LitElement {
         });
       }
     });
+  
     /** Add maker layer in the cluster group */
     this.layer_columns.addLayer(columns_layer);
     /** Add the cluster group to the map */
     this.map.addLayer(this.layer_columns);
+  
+    // Add Event Listener after a popup is opened
+    this.map.on('popupopen', () => {
+      this.addPopupTabs();
+      this.openTab(null, 'Weather'); // Standardmäßig den Tab 'Weather' öffnen
+    });
   }
+  
+  
 
   async firstUpdated() {
     this.initializeMap();
     this.drawMap();
+
+    this.addPopupTabs();
   }
 
   render() {
@@ -183,4 +188,38 @@ export class MapWidget extends LitElement {
       </div>
     `;
   }
+
+  // functions for popup tabs
+  openTab(evt, tabName) {
+    // Wenn kein Event-Objekt vorhanden ist, finde den ersten Tab-Link für tabName
+    const currentTarget = evt ? evt.currentTarget : this.shadowRoot.querySelector(".tablinks[data-tab='" + tabName + "']");
+    const tabcontent = this.shadowRoot.querySelectorAll(".tabcontent");
+    tabcontent.forEach(tc => {
+      tc.style.display = "none";
+    });
+  
+    const tablinks = this.shadowRoot.querySelectorAll(".tablinks");
+    tablinks.forEach(tl => {
+      tl.classList.remove("active");
+    });
+  
+    // Zeige den Tab-Inhalt an und setze die Klasse 'active'
+    this.shadowRoot.querySelector(`#${tabName}`).style.display = "block";
+    currentTarget.classList.add("active");
+  }
+
+  // Helper method for adding event listeners to the tab buttons
+  addPopupTabs() {
+    const buttons = this.shadowRoot.querySelectorAll(".tablinks");
+    buttons.forEach(button => {
+      button.addEventListener('click', (e) => this.openTab(e, button.getAttribute('data-tab')));
+    });
+  
+    // Activate the first tab by default
+    const firstTab = buttons[0];
+    if (firstTab) {
+      this.openTab({currentTarget: firstTab}, firstTab.getAttribute('data-tab'));
+    }
+  }
+
 }

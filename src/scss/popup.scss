@@ -1,0 +1,100 @@
+// Stildefinitionen für die Popup-Tabs
+.tablinks {
+    background-color: #f1f1f1;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 8px; // Reduziertes Padding für kleinere Buttons
+    font-size: 14px; // Kleinere Schriftgröße
+    transition: 0.3s;
+    border-radius: 4px; // Optional: Abrunden der Ecken
+}
+  
+.tablinks:hover {
+    background-color: #ddd;
+}
+  
+.tablinks.active {
+    background-color: #ccc;
+}
+  
+// Stildefinitionen für den Tab-Inhalt
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+  
+// Verbesserungen am Layout des Popups
+.popup h3 {
+    font-size: 16px; // Stellen sicher, dass die Überschrift nicht zu groß ist
+    margin-top: 0;
+    padding-top: 10px; // Etwas Abstand nach oben
+}
+
+.popup-header {
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+  
+.popup-body {
+    padding: 10px;
+}
+  
+.tabcontent {
+    display: none; /* Verstecke alle Tab-Inhalte standardmäßig */
+}
+  
+.tabcontent.active {
+    display: block; /* Zeige den aktiven Tab */
+}
+  
+.tablinks.active {
+    background-color: #ccc;
+}
+
+/* Stil für den Kopfbereich des Popups */
+.popup-header {
+    padding: 10px;
+    background-color: #f9f9f9; /* Helles Grau für den Hintergrund */
+    border-bottom: 1px solid #ccc; /* Eine Trennlinie für klare Abgrenzung */
+    font-size: 16px; /* Größere Schrift für bessere Lesbarkeit */
+    text-align: center; /* Zentriere den Text für eine ansprechende Optik */
+}
+  
+/* Stil für den Körperbereich des Popups, der die Tabs enthält */
+.popup-body {
+    padding: 10px;
+    background-color: #fff; /* Weißer Hintergrund für den Inhaltsbereich */
+}
+  
+/* Allgemeiner Tab-Link Stil */
+.tablinks {
+    padding: 10px 20px;
+    border: none;
+    background-color: #e1e1e1; /* Neutraler Hintergrund für Tabs */
+    outline: none; /* Kein Umriss beim Fokussieren */
+    cursor: pointer; /* Cursor als Zeiger für bessere Benutzerführung */
+    margin-right: 2px; /* Ein kleiner Abstand zwischen den Tabs */
+}
+  
+/* Stil für den aktiven Tab */
+.tablinks.active, .tablinks:hover {
+    background-color: #ccc; /* Dunklerer Hintergrund für aktive/hover Zustände */
+}
+  
+/* Verstecke alle Tab-Inhalte standardmäßig */
+.tabcontent {
+    display: none;
+    padding: 10px;
+    border-top: none; /* Entferne obere Linie, falls vorher gesetzt */
+}
+  
+/* Zeige den aktiven Tab-Inhalt */
+.tabcontent.active {
+    display: block;
+}
+  
