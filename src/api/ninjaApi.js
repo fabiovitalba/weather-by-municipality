@@ -83,6 +83,25 @@ export async function fetchWeatherForecast(pageNumber, pageSize) {
 	});
 }
 
+export async function fetchWeatherForecast(pageNumber, pageSize) {
+	console.log(pageNumber,pageSize)
+	//TODO: retrieve only data that is relevant
+	return callTourismGet("/ODHActivityPoi/", {
+		limit: -1,
+		fields: "Id,Shortname,Detail.de.Title,GpsInfo",
+		where: "odhactive.eq.true,active.eq.true",
+		distinct: true,
+		origin: config.ORIGIN
+	})
+	.then(response => {
+		this.weatherForecasts = response;
+	})
+	.catch(e => {
+		console.log(e)
+		throw e;
+	});
+}
+
 /*
 export async function fetchStations(type) {
 	console.log(type)
