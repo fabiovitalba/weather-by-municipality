@@ -83,7 +83,7 @@ export async function fetchWeatherForecast(pageNumber, pageSize) {
 	});
 }
 
-export async function fetchWeatherForecast(pageNumber, pageSize) {
+export async function fetchHikingTrail(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
 	//TODO: retrieve only data that is relevant
 	return callTourismGet("/ODHActivityPoi/", {

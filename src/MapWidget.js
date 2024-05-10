@@ -36,6 +36,7 @@ export class MapWidget extends LitElement {
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
     this.weatherForecasts = [];
+    this.hikingTrail = [];
 
     this.colors = [
       "green",
@@ -47,6 +48,7 @@ export class MapWidget extends LitElement {
     /* Requests */
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
     this.fetchWeatherForecast = fetchWeatherForecast.bind(this);
+    this.fetchHikingTrail = fetchHikingTrail.bind(this);
   }
 
   async initializeMap() {
@@ -65,11 +67,14 @@ export class MapWidget extends LitElement {
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
     await this.fetchWeatherForecast(1, 100);
+    await this.fetchHikingTrail(1, 100);
     this.addWeatherForecastToMunicipality();
 
     let columns_layer_array = [];
+    let columns_layer_array2 = [];
     
     this.addMunicipalitiesLayer(columns_layer_array);
+    this.addFetchHikingTrail(columns_layer_array2);
   }
 
   addWeatherForecastToMunicipality() {
@@ -169,6 +174,10 @@ export class MapWidget extends LitElement {
   async firstUpdated() {
     this.initializeMap();
     this.drawMap();
+  }
+
+  addFetchHikingTrail(columns_layer_array) {
+
   }
 
   render() {
