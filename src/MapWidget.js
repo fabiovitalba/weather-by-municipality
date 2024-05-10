@@ -25,7 +25,7 @@ export class MapWidget extends LitElement {
 
     /* Map configuration */
     this.map_center = [46.479, 11.331];
-    this.map_zoom = 9;
+    this.map_zoom = 10;
     this.map_layer = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
     this.map_attribution = '<a target="_blank" href="https://opendatahub.com">OpenDataHub.com</a> | &copy; <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a target="_blank" href="https://carto.com/attribution">CARTO</a>';
 
@@ -68,7 +68,7 @@ export class MapWidget extends LitElement {
     this.addWeatherForecastToMunicipality();
 
     let columns_layer_array = [];
-    
+
     this.addMunicipalitiesLayer(columns_layer_array);
   }
 
@@ -96,14 +96,14 @@ export class MapWidget extends LitElement {
         municipality.Latitude,
         municipality.Longitude
       ];
-  
+
       let fillChar = municipality.Id ? 'M' : '&nbsp;';
-  
+
       let icon = L.divIcon({
         html: '<div class="marker"><div style="background-color: black;">' + fillChar + '</div></div>',
         iconSize: L.point(25, 25)
       });
-  
+
       /** Popup Window Content **/
       let popupCont = `
       <div class="popup">
@@ -119,7 +119,7 @@ export class MapWidget extends LitElement {
             <h4>Weather Forecast</h4>
             <table>`;
       municipality.weatherForecast.forEach(ForeCastDaily => {
-          popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
+        popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
       });
       popupCont += `</table>
           </div>
@@ -129,20 +129,23 @@ export class MapWidget extends LitElement {
           </div>
         </div>
       </div>`;
-      
+
       let popup = L.popup().setContent(popupCont);
-      
-  
+
+      popup.on('add', () => {
+        this.openTab(null, 'Weather');  // Stellt sicher, dass 'Weather' sofort sichtbar ist
+      });
+
       let marker = L.marker(pos, {
         icon: icon,
       }).bindPopup(popup);
-  
+
       columns_layer_array.push(marker);
     });
-  
+
     // Store the number of visible municipalities
     this.visibleMunicipalities = columns_layer_array.length;
-  
+
     let columns_layer = L.layerGroup(columns_layer_array);
     this.layer_columns = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
@@ -154,20 +157,20 @@ export class MapWidget extends LitElement {
         });
       }
     });
-  
+
     /** Add maker layer in the cluster group */
     this.layer_columns.addLayer(columns_layer);
     /** Add the cluster group to the map */
     this.map.addLayer(this.layer_columns);
-  
+
     // Add Event Listener after a popup is opened
     this.map.on('popupopen', () => {
       this.addPopupTabs();
-      this.openTab(null, 'Weather'); // Standardmäßig den Tab 'Weather' öffnen
+      this.openTab(null, 'Weather');  // Automatisch den 'Weather' Tab öffnen
     });
   }
-  
-  
+
+
 
   async firstUpdated() {
     this.initializeMap();
@@ -191,22 +194,16 @@ export class MapWidget extends LitElement {
 
   // functions for popup tabs
   openTab(evt, tabName) {
-    // Wenn kein Event-Objekt vorhanden ist, finde den ersten Tab-Link für tabName
-    const currentTarget = evt ? evt.currentTarget : this.shadowRoot.querySelector(".tablinks[data-tab='" + tabName + "']");
+    const currentTarget = evt ? evt.currentTarget : this.shadowRoot.querySelector(`.tablinks[data-tab='${tabName}']`);
     const tabcontent = this.shadowRoot.querySelectorAll(".tabcontent");
-    tabcontent.forEach(tc => {
-      tc.style.display = "none";
-    });
-  
+    tabcontent.forEach(tc => tc.style.display = "none");
     const tablinks = this.shadowRoot.querySelectorAll(".tablinks");
-    tablinks.forEach(tl => {
-      tl.classList.remove("active");
-    });
-  
-    // Zeige den Tab-Inhalt an und setze die Klasse 'active'
+    tablinks.forEach(tl => tl.classList.remove("active"));
     this.shadowRoot.querySelector(`#${tabName}`).style.display = "block";
     currentTarget.classList.add("active");
   }
+
+
 
   // Helper method for adding event listeners to the tab buttons
   addPopupTabs() {
@@ -214,11 +211,11 @@ export class MapWidget extends LitElement {
     buttons.forEach(button => {
       button.addEventListener('click', (e) => this.openTab(e, button.getAttribute('data-tab')));
     });
-  
+
     // Activate the first tab by default
     const firstTab = buttons[0];
     if (firstTab) {
-      this.openTab({currentTarget: firstTab}, firstTab.getAttribute('data-tab'));
+      this.openTab({ currentTarget: firstTab }, firstTab.getAttribute('data-tab'));
     }
   }
 
