@@ -94,7 +94,7 @@ export async function fetchPointsOfInterest(pageNumber, pageSize) {
 		origin: config.ORIGIN
 	})
 	.then(response => {
-		this.pointsOfInterest = response;
+		this.pointsOfInterest = response.Items;
 	})
 	.catch(e => {
 		console.log(e)

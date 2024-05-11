@@ -71,10 +71,11 @@ export class MapWidget extends LitElement {
 
     this.addWeatherForecastToMunicipality();
 
-    let columns_layer_array = [];
+    let municipality_markers_list = [];
+    let poi_markers_list = [];
     
-    this.addMunicipalitiesLayer(columns_layer_array);
-    this.addPointsOfInterestLayer(columns_layer_array);
+    this.addMunicipalitiesLayer(municipality_markers_list);
+    this.addPointsOfInterestLayer(poi_markers_list);
   }
 
   addWeatherForecastToMunicipality() {
@@ -95,7 +96,7 @@ export class MapWidget extends LitElement {
     })
   }
 
-  addMunicipalitiesLayer(columns_layer_array) {
+  addMunicipalitiesLayer(markers_list) {
     this.municipalities.map(municipality => {
       const pos = [
         municipality.Latitude,
@@ -152,17 +153,17 @@ export class MapWidget extends LitElement {
         //TODO: clear any currently shown POI
         //TODO: fetch POI based on latlong
         //TODO: display new POI on map
-        
+
         console.log('clicked',e);
         const latlng = e.latlng; // contains .lat and .lng
         console.log(latlng);
       })
 
-      columns_layer_array.push(marker);
+      markers_list.push(marker);
     });
 
-    this.visibleMunicipalities = columns_layer_array.length;
-    let columns_layer = L.layerGroup(columns_layer_array, {});
+    this.visibleMunicipalities = markers_list.length;
+    let columns_layer = L.layerGroup(markers_list, {});
 
     /** Prepare the cluster group for municipality markers */
     this.municipalities_layer_columns = new L.MarkerClusterGroup({
@@ -186,7 +187,7 @@ export class MapWidget extends LitElement {
     this.drawMap();
   }
 
-  addPointsOfInterestLayer(columns_layer_array) {
+  addPointsOfInterestLayer(markers_list) {
     this.pointsOfInterest.map(pointOfInterest => {
       const pos = [
         pointOfInterest.GpsPoints.position.Latitude,
@@ -239,11 +240,11 @@ export class MapWidget extends LitElement {
         icon: icon,
       }).bindPopup(popup);
 
-      columns_layer_array.push(marker);
+      markers_list.push(marker);
     });
 
-    this.visiblePointsOfInterest = columns_layer_array.length;
-    let columns_layer = L.layerGroup(columns_layer_array, {});
+    this.visiblePointsOfInterest = markers_list.length;
+    let columns_layer = L.layerGroup(markers_list, {});
 
     /** Prepare the cluster group for points of interest markers */
     this.poi_layer_columns = new L.MarkerClusterGroup({
