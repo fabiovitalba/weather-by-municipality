@@ -148,6 +148,16 @@ export class MapWidget extends LitElement {
         icon: icon,
       }).bindPopup(popup);
 
+      marker.on('click', (e) => {
+        //TODO: clear any currently shown POI
+        //TODO: fetch POI based on latlong
+        //TODO: display new POI on map
+        
+        console.log('clicked',e);
+        const latlng = e.latlng; // contains .lat and .lng
+        console.log(latlng);
+      })
+
       columns_layer_array.push(marker);
     });
 
