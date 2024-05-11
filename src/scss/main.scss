@@ -296,7 +296,19 @@ textarea:focus {
   outline: none;
 }
 
-.marker_cluster__marker {
+.muc_marker_cluster__marker {
+  background-color: $black;
+  color: $white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  width: 36px;
+  height: 36px;
+}
+
+.poi_marker_cluster__marker {
   background-color: $green;
   color: $white;
   border-radius: 50%;

@@ -171,7 +171,7 @@ export class MapWidget extends LitElement {
       chunkedLoading: true,
       iconCreateFunction: function (cluster) {
         return L.divIcon({
-          html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+          html: '<div class="muc_marker_cluster__marker">' + cluster.getChildCount() + '</div>',
           iconSize: L.point(36, 36)
         });
       }
@@ -194,10 +194,10 @@ export class MapWidget extends LitElement {
         pointOfInterest.GpsPoints.position.Longitude
       ];
 
-      let fillChar = pointOfInterest.Id ? 'M' : '&nbsp;';
+      let fillChar = pointOfInterest.Id ? 'P' : '&nbsp;';
 
       let icon = L.divIcon({
-        html: '<div class="marker"><div style="background-color: green;">' + fillChar + '</div></div>',
+        html: '<div class="marker"><div style="background-color: #97be0e;">' + fillChar + '</div></div>',
         iconSize: L.point(25, 25)
       });
 
@@ -252,7 +252,7 @@ export class MapWidget extends LitElement {
       chunkedLoading: true,
       iconCreateFunction: function (cluster) {
         return L.divIcon({
-          html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+          html: '<div class="poi_marker_cluster__marker">' + cluster.getChildCount() + '</div>',
           iconSize: L.point(36, 36)
         });
       }
