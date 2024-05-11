@@ -4,8 +4,8 @@ import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
-import { getStyle, rainbow } from './utils.js';
-import { fetchMunicipalities, fetchWeatherForecast } from './api/ninjaApi.js';
+import { getStyle } from './utils.js';
+import { fetchMunicipalities, fetchWeatherForecasts, fetchHikingTrails } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
 
@@ -36,7 +36,7 @@ export class MapWidget extends LitElement {
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
     this.weatherForecasts = [];
-    this.hikingTrail = [];
+    this.pointsOfInterest = [];
 
     this.colors = [
       "green",
@@ -47,8 +47,8 @@ export class MapWidget extends LitElement {
 
     /* Requests */
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
-    this.fetchWeatherForecast = fetchWeatherForecast.bind(this);
-    this.fetchHikingTrail = fetchHikingTrail.bind(this);
+    this.fetchWeatherForecasts = fetchWeatherForecasts.bind(this);
+    this.fetchHikingTrails = fetchHikingTrails.bind(this);
   }
 
   async initializeMap() {
@@ -66,15 +66,15 @@ export class MapWidget extends LitElement {
 
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
-    await this.fetchWeatherForecast(1, 100);
-    await this.fetchHikingTrail(1, 100);
+    await this.fetchWeatherForecasts(1, 100);
+    await this.fetchHikingTrails(1, 100);
+
     this.addWeatherForecastToMunicipality();
 
     let columns_layer_array = [];
-    let columns_layer_array2 = [];
     
     this.addMunicipalitiesLayer(columns_layer_array);
-    this.addFetchHikingTrail(columns_layer_array2);
+    this.addHikingTrailsLayer(columns_layer_array);
   }
 
   addWeatherForecastToMunicipality() {
@@ -155,7 +155,7 @@ export class MapWidget extends LitElement {
     let columns_layer = L.layerGroup(columns_layer_array, {});
 
     /** Prepare the cluster group for municipality markers */
-    this.layer_columns = new L.MarkerClusterGroup({
+    this.municipalities_layer_columns = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       chunkedLoading: true,
       iconCreateFunction: function (cluster) {
@@ -166,9 +166,9 @@ export class MapWidget extends LitElement {
       }
     });
     /** Add maker layer in the cluster group */
-    this.layer_columns.addLayer(columns_layer);
+    this.municipalities_layer_columns.addLayer(columns_layer);
     /** Add the cluster group to the map */
-    this.map.addLayer(this.layer_columns);
+    this.map.addLayer(this.municipalities_layer_columns);
   }
 
   async firstUpdated() {
@@ -176,8 +176,80 @@ export class MapWidget extends LitElement {
     this.drawMap();
   }
 
-  addFetchHikingTrail(columns_layer_array) {
+  addHikingTrailsLayer(columns_layer_array) {
+    this.pointsOfInterest.map(pointOfInterest => {
+      const pos = [
+        pointOfInterest.GpsPoints.position.Latitude,
+        pointOfInterest.GpsPoints.position.Longitude
+      ];
 
+      let fillChar = pointOfInterest.Id ? 'M' : '&nbsp;';
+
+      let icon = L.divIcon({
+        html: '<div class="marker"><div style="background-color: green;">' + fillChar + '</div></div>',
+        iconSize: L.point(25, 25)
+      });
+
+      /**  Popup Window Content  **/
+      let popupCont = '<div class="popup"><h3>' + pointOfInterest.Detail.de.Title + '</h3>';
+      //popupCont += '<h4>Weather Forecast</h4>'
+      //popupCont += '<table>';
+      //pointOfInterest.weatherForecast.forEach(ForeCastDaily => {
+      //  popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
+      //})
+      //popupCont += '</table>';
+      /*
+      //TODO: Add data relative to municipality
+      Object.keys(station.smetadata).forEach(key => {
+        let value = station.smetadata[key];
+        if (value) {
+          popupCont += '<tr>';
+          popupCont += '<td>' + key + '</td>';
+          if (value instanceof Object) {
+            let act_value = value[this.language];
+            if (typeof act_value === 'undefined') {
+              act_value = value[this.language_default];
+            }
+            if (typeof act_value === 'undefined') {
+              act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
+            }
+            popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
+          } else {
+            popupCont += '<td>' + value + '</td>';
+          }
+          popupCont += '</tr>';
+        }
+      });
+      */
+      popupCont += '</div>';
+
+      let popup = L.popup().setContent(popupCont);
+
+      let marker = L.marker(pos, {
+        icon: icon,
+      }).bindPopup(popup);
+
+      columns_layer_array.push(marker);
+    });
+
+    this.visiblePointsOfInterest = columns_layer_array.length;
+    let columns_layer = L.layerGroup(columns_layer_array, {});
+
+    /** Prepare the cluster group for hiking trail markers */
+    this.poi_layer_columns = new L.MarkerClusterGroup({
+      showCoverageOnHover: false,
+      chunkedLoading: true,
+      iconCreateFunction: function (cluster) {
+        return L.divIcon({
+          html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+          iconSize: L.point(36, 36)
+        });
+      }
+    });
+    /** Add maker layer in the cluster group */
+    this.poi_layer_columns.addLayer(columns_layer);
+    /** Add the cluster group to the map */
+    this.map.addLayer(this.poi_layer_columns);
   }
 
   render() {

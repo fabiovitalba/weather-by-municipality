@@ -64,7 +64,7 @@ export async function fetchMunicipalities(pageNumber, pageSize) {
 		});
 }
 
-export async function fetchWeatherForecast(pageNumber, pageSize) {
+export async function fetchWeatherForecasts(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
 	//TODO: retrieve only data that is relevant
 	return callTourismGet("/Weather/Forecast/", {
@@ -83,18 +83,18 @@ export async function fetchWeatherForecast(pageNumber, pageSize) {
 	});
 }
 
-export async function fetchHikingTrail(pageNumber, pageSize) {
+export async function fetchHikingTrails(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
 	//TODO: retrieve only data that is relevant
 	return callTourismGet("/ODHActivityPoi/", {
 		limit: -1,
-		fields: "Id,Shortname,Detail.de.Title,GpsInfo",
+		select: "Id,Shortname,Detail.de.Title,GpsInfo",
 		where: "odhactive.eq.true,active.eq.true",
 		distinct: true,
 		origin: config.ORIGIN
 	})
 	.then(response => {
-		this.weatherForecasts = response;
+		this.hikingTrails = response;
 	})
 	.catch(e => {
 		console.log(e)
