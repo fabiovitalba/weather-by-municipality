@@ -67,7 +67,8 @@ export class MapWidget extends LitElement {
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
     await this.fetchWeatherForecasts(1, 100);
-    await this.fetchPointsOfInterest(1, 100);
+    // await this.fetchPointsOfInterest(1, 100);
+    // (pageNumber, pageSize, latitude, longitude, radius)
 
     this.addWeatherForecastToMunicipality();
 
@@ -75,7 +76,9 @@ export class MapWidget extends LitElement {
     let poi_markers_list = [];
     
     this.addMunicipalitiesLayer(municipality_markers_list);
-    this.addPointsOfInterestLayer(poi_markers_list);
+    console.log('pois',this.pointsOfInterest);
+    if (this.pointsOfInterest.length > 0)
+      this.addPointsOfInterestLayer(poi_markers_list);
   }
 
   addWeatherForecastToMunicipality() {
@@ -83,8 +86,6 @@ export class MapWidget extends LitElement {
       let weatherForecast = [];
 
       let apiWeatherForecast = this.weatherForecasts.filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id);
-      //console.log('###DEBUG: municipality',municipality);
-      //console.log('###DEBUG: apiWeatherForecast',apiWeatherForecast);
       if ((apiWeatherForecast !== undefined) && (apiWeatherForecast[0] !== undefined)) {
         weatherForecast = apiWeatherForecast[0].ForeCastDaily.filter(dailyForecast => dailyForecast.WeatherDesc !== null);
       }
@@ -118,29 +119,6 @@ export class MapWidget extends LitElement {
         popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
       })
       popupCont += '</table>';
-      /*
-      //TODO: Add data relative to municipality
-      Object.keys(station.smetadata).forEach(key => {
-        let value = station.smetadata[key];
-        if (value) {
-          popupCont += '<tr>';
-          popupCont += '<td>' + key + '</td>';
-          if (value instanceof Object) {
-            let act_value = value[this.language];
-            if (typeof act_value === 'undefined') {
-              act_value = value[this.language_default];
-            }
-            if (typeof act_value === 'undefined') {
-              act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
-            }
-            popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
-          } else {
-            popupCont += '<td>' + value + '</td>';
-          }
-          popupCont += '</tr>';
-        }
-      });
-      */
       popupCont += '</div>';
 
       let popup = L.popup().setContent(popupCont);
@@ -149,14 +127,17 @@ export class MapWidget extends LitElement {
         icon: icon,
       }).bindPopup(popup);
 
-      marker.on('click', (e) => {
+      marker.on('click', async (e) => {
         //TODO: clear any currently shown POI
-        //TODO: fetch POI based on latlong
-        //TODO: display new POI on map
+        if (this.poi_layer_columns !== undefined)
+          this.map.removeLayer(this.poi_layer_columns);
 
-        console.log('clicked',e);
-        const latlng = e.latlng; // contains .lat and .lng
-        console.log(latlng);
+        //TODO: fetch POI based on latlong
+        const latlng = e.latlng;
+        await this.fetchPointsOfInterest(1,100,latlng.lat,latlng.lng,1000);
+
+        //TODO: display new POI on map
+        this.drawMap();
       })
 
       markers_list.push(marker);
@@ -190,8 +171,8 @@ export class MapWidget extends LitElement {
   addPointsOfInterestLayer(markers_list) {
     this.pointsOfInterest.map(pointOfInterest => {
       const pos = [
-        pointOfInterest.GpsPoints.position.Latitude,
-        pointOfInterest.GpsPoints.position.Longitude
+        pointOfInterest.GpsInfo[0].Latitude,
+        pointOfInterest.GpsInfo[0].Longitude
       ];
 
       let fillChar = pointOfInterest.Id ? 'P' : '&nbsp;';
@@ -202,36 +183,13 @@ export class MapWidget extends LitElement {
       });
 
       /**  Popup Window Content  **/
-      let popupCont = '<div class="popup"><h3>' + pointOfInterest.Detail.de.Title + '</h3>';
+      let popupCont = '<div class="popup"><h3>' + pointOfInterest.Shortname + '</h3>';
       //popupCont += '<h4>Weather Forecast</h4>'
       //popupCont += '<table>';
       //pointOfInterest.weatherForecast.forEach(ForeCastDaily => {
       //  popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
       //})
       //popupCont += '</table>';
-      /*
-      //TODO: Add data relative to municipality
-      Object.keys(station.smetadata).forEach(key => {
-        let value = station.smetadata[key];
-        if (value) {
-          popupCont += '<tr>';
-          popupCont += '<td>' + key + '</td>';
-          if (value instanceof Object) {
-            let act_value = value[this.language];
-            if (typeof act_value === 'undefined') {
-              act_value = value[this.language_default];
-            }
-            if (typeof act_value === 'undefined') {
-              act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
-            }
-            popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
-          } else {
-            popupCont += '<td>' + value + '</td>';
-          }
-          popupCont += '</tr>';
-        }
-      });
-      */
       popupCont += '</div>';
 
       let popup = L.popup().setContent(popupCont);
