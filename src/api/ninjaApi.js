@@ -83,7 +83,7 @@ export async function fetchWeatherForecasts(pageNumber, pageSize) {
 	});
 }
 
-export async function fetchHikingTrails(pageNumber, pageSize) {
+export async function fetchPointsOfInterest(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
 	//TODO: retrieve only data that is relevant
 	return callTourismGet("/ODHActivityPoi/", {
@@ -94,7 +94,7 @@ export async function fetchHikingTrails(pageNumber, pageSize) {
 		origin: config.ORIGIN
 	})
 	.then(response => {
-		this.hikingTrails = response;
+		this.pointsOfInterest = response;
 	})
 	.catch(e => {
 		console.log(e)

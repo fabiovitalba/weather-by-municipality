@@ -5,7 +5,7 @@ import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
 import { getStyle } from './utils.js';
-import { fetchMunicipalities, fetchWeatherForecasts, fetchHikingTrails } from './api/ninjaApi.js';
+import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
 
@@ -48,7 +48,7 @@ export class MapWidget extends LitElement {
     /* Requests */
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
     this.fetchWeatherForecasts = fetchWeatherForecasts.bind(this);
-    this.fetchHikingTrails = fetchHikingTrails.bind(this);
+    this.fetchPointsOfInterest = fetchPointsOfInterest.bind(this);
   }
 
   async initializeMap() {
@@ -67,14 +67,14 @@ export class MapWidget extends LitElement {
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
     await this.fetchWeatherForecasts(1, 100);
-    await this.fetchHikingTrails(1, 100);
+    await this.fetchPointsOfInterest(1, 100);
 
     this.addWeatherForecastToMunicipality();
 
     let columns_layer_array = [];
     
     this.addMunicipalitiesLayer(columns_layer_array);
-    this.addHikingTrailsLayer(columns_layer_array);
+    this.addPointsOfInterestLayer(columns_layer_array);
   }
 
   addWeatherForecastToMunicipality() {
@@ -176,7 +176,7 @@ export class MapWidget extends LitElement {
     this.drawMap();
   }
 
-  addHikingTrailsLayer(columns_layer_array) {
+  addPointsOfInterestLayer(columns_layer_array) {
     this.pointsOfInterest.map(pointOfInterest => {
       const pos = [
         pointOfInterest.GpsPoints.position.Latitude,
@@ -235,7 +235,7 @@ export class MapWidget extends LitElement {
     this.visiblePointsOfInterest = columns_layer_array.length;
     let columns_layer = L.layerGroup(columns_layer_array, {});
 
-    /** Prepare the cluster group for hiking trail markers */
+    /** Prepare the cluster group for points of interest markers */
     this.poi_layer_columns = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       chunkedLoading: true,
