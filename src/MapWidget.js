@@ -4,8 +4,8 @@ import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
-import { getStyle, rainbow } from './utils.js';
-import { fetchMunicipalities, fetchWeatherForecast } from './api/ninjaApi.js';
+import { getStyle } from './utils.js';
+import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
 
@@ -36,6 +36,7 @@ export class MapWidget extends LitElement {
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
     this.weatherForecasts = [];
+    this.pointsOfInterest = [];
 
     this.colors = [
       "green",
@@ -46,7 +47,8 @@ export class MapWidget extends LitElement {
 
     /* Requests */
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
-    this.fetchWeatherForecast = fetchWeatherForecast.bind(this);
+    this.fetchWeatherForecasts = fetchWeatherForecasts.bind(this);
+    this.fetchPointsOfInterest = fetchPointsOfInterest.bind(this);
   }
 
   async initializeMap() {
@@ -64,12 +66,19 @@ export class MapWidget extends LitElement {
 
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
-    await this.fetchWeatherForecast(1, 100);
+    await this.fetchWeatherForecasts(1, 100);
+    // await this.fetchPointsOfInterest(1, 100);
+    // (pageNumber, pageSize, latitude, longitude, radius)
+
     this.addWeatherForecastToMunicipality();
 
-    let columns_layer_array = [];
-
-    this.addMunicipalitiesLayer(columns_layer_array);
+    let municipality_markers_list = [];
+    let poi_markers_list = [];
+    
+    this.addMunicipalitiesLayer(municipality_markers_list);
+    console.log('pois',this.pointsOfInterest);
+    if (this.pointsOfInterest.length > 0)
+      this.addPointsOfInterestLayer(poi_markers_list);
   }
 
   addWeatherForecastToMunicipality() {
@@ -77,8 +86,6 @@ export class MapWidget extends LitElement {
       let weatherForecast = [];
 
       let apiWeatherForecast = this.weatherForecasts.filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id);
-      //console.log('###DEBUG: municipality',municipality);
-      //console.log('###DEBUG: apiWeatherForecast',apiWeatherForecast);
       if ((apiWeatherForecast !== undefined) && (apiWeatherForecast[0] !== undefined)) {
         weatherForecast = apiWeatherForecast[0].ForeCastDaily.filter(dailyForecast => dailyForecast.WeatherDesc !== null);
       }
@@ -90,7 +97,7 @@ export class MapWidget extends LitElement {
     })
   }
 
-  addMunicipalitiesLayer(columns_layer_array) {
+  addMunicipalitiesLayer(markers_list) {
     this.municipalities.map(municipality => {
       const pos = [
         municipality.Latitude,
@@ -140,28 +147,41 @@ export class MapWidget extends LitElement {
         icon: icon,
       }).bindPopup(popup);
 
-      columns_layer_array.push(marker);
+      marker.on('click', async (e) => {
+        //TODO: clear any currently shown POI
+        if (this.poi_layer_columns !== undefined)
+          this.map.removeLayer(this.poi_layer_columns);
+
+        //TODO: fetch POI based on latlong
+        const latlng = e.latlng;
+        await this.fetchPointsOfInterest(1,100,latlng.lat,latlng.lng,1000);
+
+        //TODO: display new POI on map
+        this.drawMap();
+      })
+
+      markers_list.push(marker);
     });
 
-    // Store the number of visible municipalities
-    this.visibleMunicipalities = columns_layer_array.length;
+    this.visibleMunicipalities = markers_list.length;
+    let columns_layer = L.layerGroup(markers_list, {});
 
-    let columns_layer = L.layerGroup(columns_layer_array);
-    this.layer_columns = new L.MarkerClusterGroup({
+    /** Prepare the cluster group for municipality markers */
+    this.municipalities_layer_columns = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       chunkedLoading: true,
       iconCreateFunction: function (cluster) {
         return L.divIcon({
-          html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+          html: '<div class="muc_marker_cluster__marker">' + cluster.getChildCount() + '</div>',
           iconSize: L.point(36, 36)
         });
       }
     });
 
     /** Add maker layer in the cluster group */
-    this.layer_columns.addLayer(columns_layer);
+    this.municipalities_layer_columns.addLayer(columns_layer);
     /** Add the cluster group to the map */
-    this.map.addLayer(this.layer_columns);
+    this.map.addLayer(this.municipalities_layer_columns);
 
     // Add Event Listener after a popup is opened
     this.map.on('popupopen', () => {
@@ -177,6 +197,59 @@ export class MapWidget extends LitElement {
     this.drawMap();
 
     this.addPopupTabs();
+  }
+
+  addPointsOfInterestLayer(markers_list) {
+    this.pointsOfInterest.map(pointOfInterest => {
+      const pos = [
+        pointOfInterest.GpsInfo[0].Latitude,
+        pointOfInterest.GpsInfo[0].Longitude
+      ];
+
+      let fillChar = pointOfInterest.Id ? 'P' : '&nbsp;';
+
+      let icon = L.divIcon({
+        html: '<div class="marker"><div style="background-color: #97be0e;">' + fillChar + '</div></div>',
+        iconSize: L.point(25, 25)
+      });
+
+      /**  Popup Window Content  **/
+      let popupCont = '<div class="popup"><h3>' + pointOfInterest.Shortname + '</h3>';
+      //popupCont += '<h4>Weather Forecast</h4>'
+      //popupCont += '<table>';
+      //pointOfInterest.weatherForecast.forEach(ForeCastDaily => {
+      //  popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
+      //})
+      //popupCont += '</table>';
+      popupCont += '</div>';
+
+      let popup = L.popup().setContent(popupCont);
+
+      let marker = L.marker(pos, {
+        icon: icon,
+      }).bindPopup(popup);
+
+      markers_list.push(marker);
+    });
+
+    this.visiblePointsOfInterest = markers_list.length;
+    let columns_layer = L.layerGroup(markers_list, {});
+
+    /** Prepare the cluster group for points of interest markers */
+    this.poi_layer_columns = new L.MarkerClusterGroup({
+      showCoverageOnHover: false,
+      chunkedLoading: true,
+      iconCreateFunction: function (cluster) {
+        return L.divIcon({
+          html: '<div class="poi_marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+          iconSize: L.point(36, 36)
+        });
+      }
+    });
+    /** Add maker layer in the cluster group */
+    this.poi_layer_columns.addLayer(columns_layer);
+    /** Add the cluster group to the map */
+    this.map.addLayer(this.poi_layer_columns);
   }
 
   render() {

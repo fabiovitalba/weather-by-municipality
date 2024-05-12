@@ -64,7 +64,7 @@ export async function fetchMunicipalities(pageNumber, pageSize) {
 		});
 }
 
-export async function fetchWeatherForecast(pageNumber, pageSize) {
+export async function fetchWeatherForecasts(pageNumber, pageSize) {
 	console.log(pageNumber,pageSize)
 	//TODO: retrieve only data that is relevant
 	return callTourismGet("/Weather/Forecast/", {
@@ -76,6 +76,29 @@ export async function fetchWeatherForecast(pageNumber, pageSize) {
 	})
 	.then(response => {
 		this.weatherForecasts = response;
+	})
+	.catch(e => {
+		console.log(e)
+		throw e;
+	});
+}
+
+export async function fetchPointsOfInterest(pageNumber, pageSize, latitude, longitude, radius) {
+	console.log(pageNumber,pageSize)
+	//TODO: retrieve only data that is relevant
+	return callTourismGet("/ODHActivityPoi/", {
+		fields: "Id,Type,Shortname,Detail.de.Title,GpsInfo",
+		origin: config.ORIGIN,
+		pagenumber: pageNumber,
+		pagesize: pageSize,
+		latitude: latitude,
+		longitude: longitude,
+		radius: radius,
+		type: 6,
+		activitytype: 16,
+	})
+	.then(response => {
+		this.pointsOfInterest = response.Items;
 	})
 	.catch(e => {
 		console.log(e)
