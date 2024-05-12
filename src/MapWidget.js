@@ -10,10 +10,11 @@ import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest } fro
 export class MapWidget extends LitElement {
   static get properties() {
     return {
-      propLocale: {
+      langAndLocale: {
         type: String,
-        attribute: 'locale'
+        attribute: 'lang-and-locale'
       },
+      
     };
   }
 
@@ -28,8 +29,9 @@ export class MapWidget extends LitElement {
 
     /* Internationalization */
     this.language_default = 'en';
-    this.language = this.propLocale ? this.propLocale.slice(0,2) : this.language_default;
-    this.locale = this.propLocale;
+    this.language = this.language_default;
+    this.locale_default = 'en-US';
+    this.locale = this.locale_default;
 
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
@@ -48,6 +50,11 @@ export class MapWidget extends LitElement {
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
     this.fetchWeatherForecasts = fetchWeatherForecasts.bind(this);
     this.fetchPointsOfInterest = fetchPointsOfInterest.bind(this);
+  }
+
+  async initComponent() {
+    this.language = this.langAndLocale ? this.langAndLocale.slice(0,2) : this.language_default;
+    this.locale = this.langAndLocale;
   }
 
   async initializeMap() {
@@ -207,6 +214,7 @@ export class MapWidget extends LitElement {
 
 
   async firstUpdated() {
+    this.initComponent();
     this.initializeMap();
     this.drawMunicipalitiesMap();
     this.drawPoiMap();
@@ -228,7 +236,6 @@ export class MapWidget extends LitElement {
         iconSize: L.point(25, 25)
       });
 
-      console.log('poi',pointOfInterest);
       let poiDescription = pointOfInterest.Detail[this.language].BaseText ? pointOfInterest.Detail[this.language].BaseText : pointOfInterest.Detail[this.language].IntroText;
       if ((poiDescription === undefined) || (poiDescription === null))
         poiDescription = pointOfInterest.Detail[this.language].MetaDesc;
@@ -267,19 +274,6 @@ export class MapWidget extends LitElement {
     this.map.addLayer(this.poi_layer_columns);
   }
 
-  render() {
-    return html`
-      <style>
-        ${getStyle(style__markercluster)}
-        ${getStyle(style__leaflet)}
-        ${getStyle(style)}
-      </style>
-      <div id="map_widget">
-        <div id="map" class="map"></div>
-      </div>
-    `;
-  }
-
   // functions for popup tabs
   openTab(evt, tabName) {
     const currentTarget = evt ? evt.currentTarget : this.shadowRoot.querySelector(`.tablinks[data-tab='${tabName}']`);
@@ -306,5 +300,18 @@ export class MapWidget extends LitElement {
     if (firstTab) {
       this.openTab({ currentTarget: firstTab }, firstTab.getAttribute('data-tab'));
     }
+  }
+
+  render() {
+    return html`
+      <style>
+        ${getStyle(style__markercluster)}
+        ${getStyle(style__leaflet)}
+        ${getStyle(style)}
+      </style>
+      <div id="map_widget">
+        <div id="map" class="map"></div>
+      </div>
+    `;
   }
 }
