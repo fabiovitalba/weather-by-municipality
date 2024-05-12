@@ -4,21 +4,19 @@ import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
-import { getStyle } from './utils.js';
+import { formatDate, getStyle } from './utils.js';
 import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
 
-  /*
   static get properties() {
     return {
-      propStationTypes: {
+      propLanguage: {
         type: String,
-        attribute: 'station-types'
+        attribute: 'language'
       },
     };
   }
-  */
 
   constructor() {
     super();
@@ -31,7 +29,7 @@ export class MapWidget extends LitElement {
 
     /* Internationalization */
     this.language_default = 'en';
-    this.language = 'de';
+    this.language = this.propLanguage ? this.propLanguage : 'de';
 
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
@@ -82,9 +80,17 @@ export class MapWidget extends LitElement {
     this.municipalities = this.municipalities.map(municipality => {
       let weatherForecast = [];
 
-      let apiWeatherForecast = this.weatherForecasts.filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id);
-      if ((apiWeatherForecast !== undefined) && (apiWeatherForecast[0] !== undefined)) {
-        weatherForecast = apiWeatherForecast[0].ForeCastDaily.filter(dailyForecast => dailyForecast.WeatherDesc !== null);
+      let apiWeatherForecast = this.weatherForecasts
+        .filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id)
+        .map(weatherForecast => weatherForecast.ForeCastDaily)[0];
+      
+      if ((apiWeatherForecast !== undefined) && (apiWeatherForecast.length > 0)) {
+        weatherForecast = apiWeatherForecast
+          .filter(dailyForecast => dailyForecast.WeatherDesc !== null)
+          .filter(dailyForecast => {
+            return new Date(dailyForecast.Date) > new Date();
+          })
+          .slice(0,3);  // Limit to a maximum of 3 Entries
       }
 
       return {
@@ -122,9 +128,9 @@ export class MapWidget extends LitElement {
           <div id="Weather" class="tabcontent" style="display: block;">
             <h4>Weather Forecast</h4>
             <table>`;
-            municipality.weatherForecast.forEach(ForeCastDaily => {
-              popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
-            });
+              municipality.weatherForecast.forEach(ForeCastDaily => {
+                popupCont += `<tr><td>${formatDate(ForeCastDaily.Date)}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
+              });
             popupCont += `</table>
           </div>
           <div id="Details" class="tabcontent" style="display: none;">
@@ -145,15 +151,15 @@ export class MapWidget extends LitElement {
       }).bindPopup(popup);
 
       marker.on('click', async (e) => {
-        //TODO: clear any currently shown POI
+        // Clear existing layer of POI
         if (this.poi_layer_columns !== undefined)
           this.map.removeLayer(this.poi_layer_columns);
 
-        //TODO: fetch POI based on latlong
+        // Fetch POI near selected Lat/Lon
         const latlng = e.latlng;
         await this.fetchPointsOfInterest(1,100,latlng.lat,latlng.lng,1000);
 
-        //TODO: display new POI on map
+        // Redraw POI layer
         this.drawMap();
       })
 
