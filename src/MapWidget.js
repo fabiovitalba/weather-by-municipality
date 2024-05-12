@@ -67,8 +67,6 @@ export class MapWidget extends LitElement {
   async drawMap() {
     await this.fetchMunicipalities(1, 100);
     await this.fetchWeatherForecasts(1, 100);
-    // await this.fetchPointsOfInterest(1, 100);
-    // (pageNumber, pageSize, latitude, longitude, radius)
 
     this.addWeatherForecastToMunicipality();
 
@@ -76,7 +74,6 @@ export class MapWidget extends LitElement {
     let poi_markers_list = [];
     
     this.addMunicipalitiesLayer(municipality_markers_list);
-    console.log('pois',this.pointsOfInterest);
     if (this.pointsOfInterest.length > 0)
       this.addPointsOfInterestLayer(poi_markers_list);
   }
@@ -125,10 +122,10 @@ export class MapWidget extends LitElement {
           <div id="Weather" class="tabcontent" style="display: block;">
             <h4>Weather Forecast</h4>
             <table>`;
-      municipality.weatherForecast.forEach(ForeCastDaily => {
-        popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
-      });
-      popupCont += `</table>
+            municipality.weatherForecast.forEach(ForeCastDaily => {
+              popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
+            });
+            popupCont += `</table>
           </div>
           <div id="Details" class="tabcontent" style="display: none;">
             <h4>Details</h4>
