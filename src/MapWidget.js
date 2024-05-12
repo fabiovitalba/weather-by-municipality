@@ -35,6 +35,7 @@ export class MapWidget extends LitElement {
     this.municipalities = [];
     this.weatherForecasts = [];
     this.pointsOfInterest = [];
+    this.lastClickedLatLong = null;
 
     this.colors = [
       "green",
@@ -122,10 +123,10 @@ export class MapWidget extends LitElement {
         </div>
         <div class="popup-body">
           <div class="tabs">
-            <button class="tablinks" data-tab="Weather">Weather</button>
+            <button class="tablinks" data-tab="WeatherForecast">Weather Forecast</button>
             <button class="tablinks" data-tab="Details">Details</button>
           </div>
-          <div id="Weather" class="tabcontent" style="display: block;">
+          <div id="WeatherForecast" class="tabcontent" style="display: block;">
             <h4>Weather Forecast</h4>
             <table>`;
               municipality.weatherForecast.forEach(ForeCastDaily => {
@@ -143,7 +144,7 @@ export class MapWidget extends LitElement {
       let popup = L.popup().setContent(popupCont);
 
       popup.on('add', () => {
-        this.openTab(null, 'Weather');  // Stellt sicher, dass 'Weather' sofort sichtbar ist
+        this.openTab(null, 'WeatherForecast');  // Stellt sicher, dass 'Weather' sofort sichtbar ist
       });
 
       let marker = L.marker(pos, {
@@ -151,12 +152,17 @@ export class MapWidget extends LitElement {
       }).bindPopup(popup);
 
       marker.on('click', async (e) => {
+        const latlng = e.latlng;
+        if ((this.lastClickedLatLong !== null) && (this.lastClickedLatLong.lat === latlng.lat) && (this.lastClickedLatLong.lng === latlng.lng))
+          return; // No action required
+        this.lastClickedLatLong = latlng;
+
         // Clear existing layer of POI
-        if (this.poi_layer_columns !== undefined)
+        if (this.poi_layer_columns !== undefined) {
           this.map.removeLayer(this.poi_layer_columns);
+        }
 
         // Fetch POI near selected Lat/Lon
-        const latlng = e.latlng;
         await this.fetchPointsOfInterest(1,100,latlng.lat,latlng.lng,1000);
 
         // Redraw POI layer
@@ -189,7 +195,7 @@ export class MapWidget extends LitElement {
     // Add Event Listener after a popup is opened
     this.map.on('popupopen', () => {
       this.addPopupTabs();
-      this.openTab(null, 'Weather');  // Automatisch den 'Weather' Tab öffnen
+      this.openTab(null, 'WeatherForecast');  // Automatisch den 'WeatherForecast' Tab öffnen
     });
   }
 
