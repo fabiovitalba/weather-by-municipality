@@ -4,16 +4,15 @@ import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
-import { formatDate, getStyle } from './utils.js';
+import { formatDateInLang, getStyle } from './utils.js';
 import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest } from './api/ninjaApi.js';
 
 export class MapWidget extends LitElement {
-
   static get properties() {
     return {
-      propLanguage: {
+      propLocale: {
         type: String,
-        attribute: 'language'
+        attribute: 'locale'
       },
     };
   }
@@ -29,7 +28,8 @@ export class MapWidget extends LitElement {
 
     /* Internationalization */
     this.language_default = 'en';
-    this.language = this.propLanguage ? this.propLanguage : 'de';
+    this.language = this.propLocale ? this.propLocale.slice(0,2) : this.language_default;
+    this.locale = this.propLocale;
 
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
@@ -63,16 +63,21 @@ export class MapWidget extends LitElement {
     }).addTo(this.map);
   }
 
-  async drawMap() {
-    await this.fetchMunicipalities(1, 100);
-    await this.fetchWeatherForecasts(1, 100);
+  async drawMunicipalitiesMap() {
+    if (this.municipalities.length === 0) {
+      await this.fetchMunicipalities(this.language);
+      await this.fetchWeatherForecasts(this.language);
 
-    this.addWeatherForecastToMunicipality();
+      this.addWeatherForecastToMunicipality();
+    }
 
     let municipality_markers_list = [];
-    let poi_markers_list = [];
     
     this.addMunicipalitiesLayer(municipality_markers_list);
+  }
+
+  async drawPoiMap() {
+    let poi_markers_list = [];
     if (this.pointsOfInterest.length > 0)
       this.addPointsOfInterestLayer(poi_markers_list);
   }
@@ -129,9 +134,9 @@ export class MapWidget extends LitElement {
           <div id="WeatherForecast" class="tabcontent" style="display: block;">
             <h4>Weather Forecast</h4>
             <table>`;
-              municipality.weatherForecast.forEach(ForeCastDaily => {
-                popupCont += `<tr><td>${formatDate(ForeCastDaily.Date)}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`;
-              });
+            municipality.weatherForecast.forEach(ForeCastDaily => {
+              popupCont += `<tr><td>${ formatDateInLang(ForeCastDaily.Date) }</td><td>${ ForeCastDaily.WeatherDesc }</td><td><img src='${ ForeCastDaily.WeatherImgUrl }' /></td></tr>`;
+            });
             popupCont += `</table>
           </div>
           <div id="Details" class="tabcontent" style="display: none;">
@@ -163,10 +168,10 @@ export class MapWidget extends LitElement {
         }
 
         // Fetch POI near selected Lat/Lon
-        await this.fetchPointsOfInterest(1,100,latlng.lat,latlng.lng,1000);
+        await this.fetchPointsOfInterest(this.language,1,100,latlng.lat,latlng.lng,1000);
 
         // Redraw POI layer
-        this.drawMap();
+        this.drawPoiMap();
       })
 
       markers_list.push(marker);
@@ -203,7 +208,8 @@ export class MapWidget extends LitElement {
 
   async firstUpdated() {
     this.initializeMap();
-    this.drawMap();
+    this.drawMunicipalitiesMap();
+    this.drawPoiMap();
 
     this.addPopupTabs();
   }
@@ -222,14 +228,14 @@ export class MapWidget extends LitElement {
         iconSize: L.point(25, 25)
       });
 
+      console.log('poi',pointOfInterest);
+      let poiDescription = pointOfInterest.Detail[this.language].BaseText ? pointOfInterest.Detail[this.language].BaseText : pointOfInterest.Detail[this.language].IntroText;
+      if ((poiDescription === undefined) || (poiDescription === null))
+        poiDescription = pointOfInterest.Detail[this.language].MetaDesc;
+      
       /**  Popup Window Content  **/
-      let popupCont = '<div class="popup"><h3>' + pointOfInterest.Shortname + '</h3>';
-      //popupCont += '<h4>Weather Forecast</h4>'
-      //popupCont += '<table>';
-      //pointOfInterest.weatherForecast.forEach(ForeCastDaily => {
-      //  popupCont += `<tr><td>${ForeCastDaily.Date}</td><td>${ForeCastDaily.WeatherDesc}</td><td><img src='${ForeCastDaily.WeatherImgUrl}' /></td></tr>`
-      //})
-      //popupCont += '</table>';
+      let popupCont = '<div class="popup"><h3>' + pointOfInterest.Detail[this.language].Title + '</h3>';
+        popupCont += '<p>' + poiDescription + '</p>';
       popupCont += '</div>';
 
       let popup = L.popup().setContent(popupCont);
@@ -285,11 +291,12 @@ export class MapWidget extends LitElement {
     currentTarget.classList.add("active");
   }
 
-
-
   // Helper method for adding event listeners to the tab buttons
   addPopupTabs() {
     const buttons = this.shadowRoot.querySelectorAll(".tablinks");
+    if (buttons === null)
+      return;
+
     buttons.forEach(button => {
       button.addEventListener('click', (e) => this.openTab(e, button.getAttribute('data-tab')));
     });
@@ -300,5 +307,4 @@ export class MapWidget extends LitElement {
       this.openTab({ currentTarget: firstTab }, firstTab.getAttribute('data-tab'));
     }
   }
-
 }

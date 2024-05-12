@@ -25,24 +25,24 @@ export function rainbow(numOfSteps, step) {
     return (c);
 }
 
-export function formatDate(dateString, lang = 'en-US') {
+export function formatDateInLang(dateString, lang = 'en-US') {
     const date = new Date(dateString);
-  
+
     // Define the month names
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
-  
+
     // Get the day of the week and month
     const dayOfWeek = date.toLocaleDateString(lang, { weekday: 'long' });
     const month = monthNames[date.getMonth()];
-  
+
     // Get the year
     const year = date.getFullYear();
-  
+
     // Form the desired string
     const formattedDateString = `${dayOfWeek}, ${month} ${year}`;
-  
+
     return formattedDateString;
 }
