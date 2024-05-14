@@ -4,6 +4,8 @@
 
 import axios from "axios";
 import config from "./config";
+import { dateSeasonValue } from "../utils";
+import { ODHActivityPoi } from "./enums";
 
 export function callTourismGet(path, params) {
 	return axios
@@ -54,7 +56,7 @@ export async function fetchWeatherForecasts(lang) {
 	});
 }
 
-export async function fetchPointsOfInterest(lang, pageNumber, pageSize, latitude, longitude, radius) {
+export async function fetchPointsOfInterest(lang, pageNumber, pageSize, latitude, longitude, radius, date = null) {
 	return callTourismGet("/ODHActivityPoi/", {
 		fields: "Id,Type,Shortname,Detail,GpsInfo",
 		distinct: true,
@@ -65,7 +67,7 @@ export async function fetchPointsOfInterest(lang, pageNumber, pageSize, latitude
 		longitude: longitude,
 		radius: radius,
 		langfilter: lang,
-		type: 6,
+		type: date ? dateSeasonValue(date) : ODHActivityPoi.ALL,
 		activitytype: 16,
 	})
 	.then(response => {

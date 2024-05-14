@@ -175,7 +175,7 @@ export class MapWidget extends LitElement {
         }
 
         // Fetch POI near selected Lat/Lon
-        await this.fetchPointsOfInterest(this.language,1,100,latlng.lat,latlng.lng,1000);
+        await this.fetchPointsOfInterest(this.language,1,100,latlng.lat,latlng.lng,1000,new Date());
 
         // Redraw POI layer
         this.drawPoiMap();

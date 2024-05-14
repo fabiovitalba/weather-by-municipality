@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { ODHActivityPoi } from "./api/enums";
+
 export const getStyle = array => array[0][1];
 
 export function rainbow(numOfSteps, step) {
@@ -45,4 +47,15 @@ export function formatDateInLang(dateString, lang = 'en-US') {
     const formattedDateString = `${dayOfWeek}, ${month} ${year}`;
 
     return formattedDateString;
+}
+
+export function dateSeasonValue(date) {
+    const month = date.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
+    if (month >= 11 || month <= 3) {
+        return ODHActivityPoi.WINTER;
+    } else if (month >= 5 && month <= 9) {
+        return ODHActivityPoi.SUMMER;
+    } else {
+        return ODHActivityPoi.WINTER + ODHActivityPoi.SUMMER;
+    }
 }
