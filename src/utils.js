@@ -27,7 +27,7 @@ export function rainbow(numOfSteps, step) {
     return (c);
 }
 
-export function formatDateInLang(dateString, lang = 'en-US') {
+export function formatDateInLang(dateString, locale = 'en-US') {
     const date = new Date(dateString);
 
     // Define the month names
@@ -55,8 +55,8 @@ export function formatDateInLang(dateString, lang = 'en-US') {
     };
 
     // Get the day of the week and month
-    const dayOfWeek = date.toLocaleDateString(lang, { weekday: 'long' });
-    const month = monthNames[lang.slice(0,2)][date.getMonth()];
+    const dayOfWeek = date.toLocaleDateString(locale, { weekday: 'long' });
+    const month = monthNames[locale.slice(0,2)][date.getMonth()];
 
     // Get the year
     const year = date.getFullYear();

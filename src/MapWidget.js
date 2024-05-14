@@ -146,7 +146,7 @@ export class MapWidget extends LitElement {
             <h4>Weather Forecast</h4>
             <table>`;
             municipality.weatherForecast.forEach(ForeCastDaily => {
-              popupCont += `<tr><td>${ formatDateInLang(ForeCastDaily.Date) }</td><td>${ ForeCastDaily.WeatherDesc }</td><td><img src='${ ForeCastDaily.WeatherImgUrl }' /></td></tr>`;
+              popupCont += `<tr><td>${ formatDateInLang(ForeCastDaily.Date, this.locale) }</td><td>${ ForeCastDaily.WeatherDesc }</td><td><img src='${ ForeCastDaily.WeatherImgUrl }' /></td></tr>`;
             });
             popupCont += `</table>
           </div>
