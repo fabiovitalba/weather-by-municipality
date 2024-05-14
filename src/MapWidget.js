@@ -98,17 +98,21 @@ export class MapWidget extends LitElement {
         .map(weatherForecast => weatherForecast.ForeCastDaily)[0];
       
       if ((apiWeatherForecast !== undefined) && (apiWeatherForecast.length > 0)) {
+        const currentDate = new Date();
+        // Set the time to midnight (00:00:00)
+        currentDate.setHours(0, 0, 0, 0);
         weatherForecast = apiWeatherForecast
           .filter(dailyForecast => dailyForecast.WeatherDesc !== null)
           .filter(dailyForecast => {
-            return new Date(dailyForecast.Date) > new Date();
+            return new Date(dailyForecast.Date) >= currentDate;
           })
-          .slice(0,3);  // Limit to a maximum of 3 Entries
+          .slice(0,4);  // Limit to a maximum of 3 Entries
       }
 
       return {
         ...municipality,
-        weatherForecast: weatherForecast,
+        currentWeather: weatherForecast[0],
+        weatherForecast: weatherForecast.slice(1),
       }
     })
   }
