@@ -16,7 +16,6 @@ export class MapWidget extends LitElement {
         type: String,
         attribute: 'lang-and-locale'
       },
-      
     };
   }
 
@@ -103,7 +102,6 @@ export class MapWidget extends LitElement {
     this.initializeMap();
     this.drawMunicipalitiesMap();
     this.drawPoiMap();
-
     this.addPopupTabs();
   }
 
