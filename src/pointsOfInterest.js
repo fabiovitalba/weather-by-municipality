@@ -6,7 +6,7 @@ export function addPointsOfInterestLayer(markers_list) {
             pointOfInterest.GpsInfo[0].Longitude
         ];
 
-        let fillChar = pointOfInterest.Id ? 'P' : '&nbsp;';
+        let fillChar = pointOfInterest.Id ? '👣' : '&nbsp;';
 
         let icon = L.divIcon({
             html: '<div class="marker"><div style="background-color: #97be0e;">' + fillChar + '</div></div>',

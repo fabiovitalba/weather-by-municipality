@@ -326,8 +326,8 @@ textarea:focus {
   border-radius: 50%;
   display: flex;
   align-items: center;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
 }
 
 .marker :first-child {
@@ -338,8 +338,8 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 
   &.green {
     background-color: $green;

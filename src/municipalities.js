@@ -7,7 +7,7 @@ export function addMunicipalitiesLayer(markers_list) {
             municipality.Longitude
         ];
 
-        let fillChar = municipality.Id ? 'M' : '&nbsp;';
+        let fillChar = municipality.Id ? '🏠' : '&nbsp;';
 
         let icon = L.divIcon({
             html: '<div class="marker"><div style="background-color: black;">' + fillChar + '</div></div>',
