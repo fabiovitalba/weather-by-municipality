@@ -31,14 +31,32 @@ export function formatDateInLang(dateString, lang = 'en-US') {
     const date = new Date(dateString);
 
     // Define the month names
-    const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
+    const monthNames = {
+        'en': [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ],
+        'de': [
+            "Januar", "Februar", "März", "April", "Mai", "Juni",
+            "Juli", "August", "September", "Oktober", "November", "Dezember"
+        ],
+        'fr': [
+            "janvier", "février", "mars", "avril", "mai", "juin",
+            "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+        ],
+        'ru': [
+            "январь", "февраль", "март", "апрель", "май", "июнь",
+            "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"
+        ],
+        'it': [
+            "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno",
+            "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"
+        ]
+    };
 
     // Get the day of the week and month
     const dayOfWeek = date.toLocaleDateString(lang, { weekday: 'long' });
-    const month = monthNames[date.getMonth()];
+    const month = monthNames[lang.slice(0,2)][date.getMonth()];
 
     // Get the year
     const year = date.getFullYear();
