@@ -29,17 +29,17 @@ Include the Javascript file `dist/map_widget.min.js` in your HTML and define the
 
 ### Attributes
 
-#### domain
-
-Type: select
-Options: "mobility", "tourism"
-Default: "mobility"
-
-#### station-types
+#### lang-and-locale
 
 Type: multiselect
-Options: "CreativeIndustry","EChargingStation","EChargingPlug"
-Default: []
+Options: "en-US", "en-UK", "de-DE", "de-AT", "de-CH", "it-IT", "it-CH"
+Default: "en-US"
+
+#### log-info
+
+Type: boolean
+Options: true, false
+Default: false
 
 ## Getting started
 
@@ -59,7 +59,7 @@ For a ready to use Docker environment with all prerequisites already installed a
 Get a copy of the repository:
 
 ```bash
-git clone https://github.com/noi-techpark/webcomp-generic-map.git
+git clone https://github.com/fabiovitalba/weather-by-municipality.git
 ```
 
 Change directory:
@@ -159,10 +159,6 @@ If you'd like to contribute, please follow the following instructions:
 - Create a pull request against the `development` branch.
 
 A more detailed description can be found here: [https://github.com/noi-techpark/documentation/blob/master/contributors.md](https://github.com/noi-techpark/documentation/blob/master/contributors.md).
-
-### Documentation
-
-More documentation can be found at [https://opendatahub.readthedocs.io/en/latest/index.html](https://opendatahub.readthedocs.io/en/latest/index.html).
 
 ### Boilerplate
 
