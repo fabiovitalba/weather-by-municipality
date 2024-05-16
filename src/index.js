@@ -4,6 +4,6 @@
 
 import { MapWidget } from './MapWidget.js';
 
-if (!window.customElements.get('map-widget')) {
-  window.customElements.define('map-widget', MapWidget);
+if (!window.customElements.get('day-trip-map-widget')) {
+  window.customElements.define('day-trip-map-widget', MapWidget);
 }
