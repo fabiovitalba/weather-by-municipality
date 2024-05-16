@@ -21,7 +21,7 @@ Our idea was to provide a simple webcomponent that can be used by hotels, bed an
 
 ## Usage
 
-Include the Javascript file `dist/map_widget.min.js` in your HTML and define the web component like this:
+Include the Javascript file `dist/day_trip_map_widget.min.js` in your HTML and define the web component like this:
 
 ```html
 <day-trip-map-widget lang-and-locale="de-DE" log-info></day-trip-map-widget>
@@ -66,7 +66,7 @@ git clone https://github.com/fabiovitalba/weather-by-municipality.git
 Change directory:
 
 ```bash
-cd webcomp-generic-map/
+cd weather-by-municipality/
 ```
 
 ### Dependencies

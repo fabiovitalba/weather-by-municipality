@@ -9,7 +9,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'map_widget.min.js'
+    filename: 'day_trip_map_widget.min.js'
   },
   module: {
     rules: [

@@ -10,7 +10,7 @@ module.exports = {
   watch: true,
   output: {
     path: path.resolve(__dirname, './work/scripts'),
-    filename: 'map_widget.js'
+    filename: 'day_trip_map_widget.js'
   },
   devtool: 'inline-source-map',
   module: {
