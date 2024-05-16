@@ -1,3 +1,4 @@
+import captions from "./captions";
 import { formatDateInLang } from "./utils";
 
 export function addMunicipalitiesLayer(markers_list) {
@@ -22,7 +23,7 @@ export function addMunicipalitiesLayer(markers_list) {
             </div>
             <div class="popup-body">
                 <div id="WeatherForecast">
-                    <h4>Weather Forecast</h4>
+                    <h4>${captions.weatherForecast[this.language]}</h4>
                     <table>
                         <tr>${municipality.weatherForecast.map(f => `<td>${formatDateInLang(f.Date,this.locale)}</td>`).join('')}</tr>
                         <tr>${municipality.weatherForecast.map(f => `<td><img src='${f.WeatherImgUrl}' /></td>`).join('')}</tr>
