@@ -4,7 +4,6 @@ import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
-import popupStyle from './scss/popup.scss';
 import { getStyle } from './utils.js';
 import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest } from './api/ninjaApi.js';
 import { addPointsOfInterestLayer } from './pointsOfInterest.js';
@@ -119,7 +118,6 @@ export class MapWidget extends LitElement {
         ${getStyle(style__markercluster)}
         ${getStyle(style__leaflet)}
         ${getStyle(style)}
-        ${getStyle(popupStyle)} // Einbinden der neuen SCSS-Datei
       </style>
       <div id="map_widget">
         <div id="map" class="map"></div>
