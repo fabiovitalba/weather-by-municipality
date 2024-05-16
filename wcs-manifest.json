@@ -30,53 +30,28 @@
     ]
   },
   "configuration": {
-    "tagName": "map-widget",
+    "tagName": "day-trip-map-widget",
     "options": [
       {
-        "key": "domain",
-        "type": "select",
-        "options": {
-          "values": [
-            "mobility"
-          ],
-          "default": "mobility"
-        }
-      },
-      {
-        "key": "station-types",
+        "key": "lang-and-locale",
         "type": "multiselect",
         "required": false,
         "options": {
           "values": [
-            "Bicycle",
-            "Bicyclestationbay",
-            "BikesharingStation",
-            "BluetoothStation",
-            "CarpoolingHub",
-            "CarpoolingService",
-            "CarpoolingUser",
-            "CarsharingCar",
-            "CarsharingStation",
-            "Covid-19",
-            "CreativeIndustry",
-            "EChargingPlug",
-            "EChargingStation",
-            "EnvironmentStation",
-            "LinkStation",
-            "MeteoStation",
-            "Mobilestation",
-            "NOI-Place",
-            "ParkingSensor",
-            "ParkingStation",
-            "RWISstation",
-            "Streetstation",
-            "traffic",
-            "TrafficSensor",
-            "Trafficstation",
-            "TrafficStreetFactor",
-            "VMS"
+            "de-DE",
+            "de-CH",
+            "de-AT",
+            "en-US",
+            "en-UK",
+            "it-IT",
+            "it-CH"
           ]
         }
+      },
+      {
+        "key": "debug",
+        "type": "boolean",
+        "required": false
       }
     ]
   }

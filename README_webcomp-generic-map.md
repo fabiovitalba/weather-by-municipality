@@ -30,7 +30,7 @@ components into any website.
 Include the Javascript file `dist/map_widget.min.js` in your HTML and define the web component like this:
 
 ```html
-<map-widget domain="mobility"></map-widget>
+<day-trip-map-widget domain="mobility"></day-trip-map-widget>
 ```
 
 ### Attributes
