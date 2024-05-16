@@ -17,6 +17,10 @@ export class MapWidget extends LitElement {
         type: String,
         attribute: 'lang-and-locale'
       },
+      logInfo: {
+        type: Boolean,
+        attribute: 'log-info'
+      }
     };
   }
 
@@ -34,6 +38,9 @@ export class MapWidget extends LitElement {
     this.language = this.language_default;
     this.locale_default = 'en-US';
     this.locale = this.locale_default;
+
+    /* Debugging Info */
+    this.logDebugging = false;
 
     /* Data fetched from Open Data Hub */
     this.municipalities = [];
@@ -64,6 +71,7 @@ export class MapWidget extends LitElement {
   async initComponent() {
     this.language = this.langAndLocale ? this.langAndLocale.slice(0,2) : this.language_default;
     this.locale = this.langAndLocale;
+    this.logDebugging = this.logInfo ? this.logInfo : false;
   }
 
   async initializeMap() {
