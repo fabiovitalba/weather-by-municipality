@@ -24,7 +24,7 @@ Our idea was to provide a simple webcomponent that can be used by hotels, bed an
 Include the Javascript file `dist/map_widget.min.js` in your HTML and define the web component like this:
 
 ```html
-<day-trip-map-widget lang-and-locale="de-DE"></day-trip-map-widget>
+<day-trip-map-widget lang-and-locale="de-DE" log-info></day-trip-map-widget>
 ```
 
 ### Attributes
@@ -40,6 +40,7 @@ Default: "en-US"
 Type: boolean
 Options: true, false
 Default: false
+_Simply omit this attribute if you do not wish to see any logs in the console._
 
 ## Getting started
 
