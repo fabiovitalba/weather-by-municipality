@@ -1,4 +1,3 @@
-import captions from "./captions";
 import { formatDateInLang } from "./utils";
 
 export function addMunicipalitiesLayer(markers_list) {
@@ -16,19 +15,86 @@ export function addMunicipalitiesLayer(markers_list) {
         });
 
         /** Popup Window Content **/
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const dayAfterTomorrow = new Date(today);
+        dayAfterTomorrow.setDate(today.getDate() + 2);
+        const dayAfterDayAfterTomorrow = new Date(today);
+        dayAfterDayAfterTomorrow.setDate(today.getDate() + 3);
+
+        const formatDay = (date) => date.toLocaleDateString(this.locale, { weekday: 'long' });
+
         let popupCont = `
         <div class="popup">
             <div class="popup-header">
                 <h3>${municipality.Plz} ${municipality.Shortname}</h3>
             </div>
             <div class="popup-body">
-                <div id="WeatherForecast">
-                    <h4>${captions.weatherForecast[this.language]}</h4>
+                <div class="tabs">
+                    <button class="tablinks" data-tab="WeatherForecast">Weather Forecast</button>
+                    <button class="tablinks" data-tab="HourlyForecastTomorrow">${formatDay(tomorrow)}</button>
+                    <button class="tablinks" data-tab="HourlyForecastDayAfterTomorrow">${formatDay(dayAfterTomorrow)}</button>
+                    <button class="tablinks" data-tab="HourlyForecastDayAfterDayAfterTomorrow">${formatDay(dayAfterDayAfterTomorrow)}</button>
+                </div>
+                <div id="WeatherForecast" class="tabcontent active">
+                    <h4>Weather Forecast</h4>
                     <table>
-                        <tr>${municipality.weatherForecast.map(f => `<td>${formatDateInLang(f.Date,this.locale)}</td>`).join('')}</tr>
+                        <tr>${municipality.weatherForecast.map(f => `<td>${formatDateInLang(f.Date, this.locale)}</td>`).join('')}</tr>
                         <tr>${municipality.weatherForecast.map(f => `<td><img src='${f.WeatherImgUrl}' /></td>`).join('')}</tr>
                         <tr>${municipality.weatherForecast.map(f => `<td>${f.WeatherDesc}</td>`).join('')}</tr>
                     </table>
+                </div>
+                <div id="HourlyForecastTomorrow" class="tabcontent">
+                    <h4>Hourly Forecast (${formatDay(tomorrow)})</h4>
+                    <div class="forecast">
+                        <div class="forecast-header">
+                            <span>Time</span><span>Temperature</span><span>Rain%</span>
+                        </div>
+                        ${municipality.hourlyForecast
+                            .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === tomorrow.toLocaleDateString(this.locale))
+                            .map(f => `
+                                <div class="forecast-row">
+                                    <span>${new Date(f.Date).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span>${f.Temperature}°C</span>
+                                    <span>${f.PrecipitationProbability}%</span>
+                                </div>
+                            `).join('')}
+                    </div>
+                </div>
+                <div id="HourlyForecastDayAfterTomorrow" class="tabcontent">
+                    <h4>Hourly Forecast (${formatDay(dayAfterTomorrow)})</h4>
+                    <div class="forecast">
+                        <div class="forecast-header">
+                            <span>Time</span><span>Temperature</span><span>Rain%</span>
+                        </div>
+                        ${municipality.hourlyForecast
+                            .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === dayAfterTomorrow.toLocaleDateString(this.locale))
+                            .map(f => `
+                                <div class="forecast-row">
+                                    <span>${new Date(f.Date).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span>${f.Temperature}°C</span>
+                                    <span>${f.PrecipitationProbability}%</span>
+                                </div>
+                            `).join('')}
+                    </div>
+                </div>
+                <div id="HourlyForecastDayAfterDayAfterTomorrow" class="tabcontent">
+                    <h4>Hourly Forecast (${formatDay(dayAfterDayAfterTomorrow)})</h4>
+                    <div class="forecast">
+                        <div class="forecast-header">
+                            <span>Time</span><span>Temperature</span><span>Rain%</span>
+                        </div>
+                        ${municipality.hourlyForecast
+                            .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === dayAfterDayAfterTomorrow.toLocaleDateString(this.locale))
+                            .map(f => `
+                                <div class="forecast-row">
+                                    <span>${new Date(f.Date).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span>${f.Temperature}°C</span>
+                                    <span>${f.PrecipitationProbability}%</span>
+                                </div>
+                            `).join('')}
+                    </div>
                 </div>
             </div>
         </div>`;
@@ -56,8 +122,9 @@ export function addMunicipalitiesLayer(markers_list) {
             // Redraw POI layer
             this.drawPoiMap();
 
-            // Open the popup
+            // Open the popup and activate the WeatherForecast tab
             this.map.openPopup(popup, latlng);
+            setTimeout(() => this.openTab(null, 'WeatherForecast'), 0); // Sicherstellen, dass 'WeatherForecast' aktiviert ist
         })
 
         markers_list.push(marker);
@@ -82,16 +149,27 @@ export function addMunicipalitiesLayer(markers_list) {
     this.municipalities_layer_columns.addLayer(columns_layer);
     /** Add the cluster group to the map */
     this.map.addLayer(this.municipalities_layer_columns);
+
+    // Add Event Listener after a popup is opened
+    this.map.on('popupopen', () => {
+        this.addPopupTabs();
+        setTimeout(() => this.openTab(null, 'WeatherForecast'), 0); // Automatisch den 'WeatherForecast' Tab öffnen
+    });
 }
 
 export function addWeatherForecastToMunicipality() {
     this.municipalities = this.municipalities.map(municipality => {
         let weatherForecast = [];
+        let hourlyForecast = [];
 
         let apiWeatherForecast = this.weatherForecasts
             .filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id)
             .map(weatherForecast => weatherForecast.ForeCastDaily)[0];
         
+        let apiHourlyForecast = this.weatherForecasts
+            .filter(weatherForecast => weatherForecast.LocationInfo.MunicipalityInfo.Id === municipality.Id)
+            .map(weatherForecast => weatherForecast.Forecast3HoursInterval)[0];
+
         if ((apiWeatherForecast !== undefined) && (apiWeatherForecast.length > 0)) {
             const currentDate = new Date();
             // Set the time to midnight (00:00:00)
@@ -104,10 +182,16 @@ export function addWeatherForecastToMunicipality() {
                 .slice(0,4);  // Limit to a maximum of 3 Entries
         }
 
+        if ((apiHourlyForecast !== undefined) && (apiHourlyForecast.length > 0)) {
+            hourlyForecast = apiHourlyForecast
+                .filter(hourlyForecast => hourlyForecast.WeatherDesc !== null);
+        }
+
         return {
             ...municipality,
             currentWeather: weatherForecast[0],
             weatherForecast: weatherForecast.slice(1),
+            hourlyForecast: hourlyForecast,
         }
     })
 }
