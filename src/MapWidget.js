@@ -54,7 +54,7 @@ export class MapWidget extends LitElement {
     this.enablePois = false;
 
     /* API Parameters */
-    this.poi_search_radius_default = 1000;
+    this.poi_search_radius_default = 3000;
     this.poiSearchRadiusInM = this.poi_search_radius_default;
 
     /* Debugging Info */

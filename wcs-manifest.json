@@ -1,7 +1,7 @@
 {
   "title": "Day Trip Planner",
-  "description": "A map that shows the weather and hiking trails for each municipality.",
-  "descriptionAbstract": "Map to show weather and hiking trails",
+  "description": "A webcomponent that shows municipalities and their weather forecast. Optionally show nearby hiking trails fitting the weather.",
+  "descriptionAbstract": "A webcomponent including weather forecast and hiking trails.",
   "license": "AGPL-3.0-or-later",
   "repositoryUrl": "https://github.com/fabiovitalba/weather-by-municipality.git",
   "shortName": "day-trip-planner",
@@ -41,6 +41,7 @@
       {
         "key": "lang-and-locale",
         "type": "select",
+        "label": "Language and Date Format Settings",
         "required": false,
         "options": {
           "values": [
@@ -58,6 +59,7 @@
       {
         "key": "log-info",
         "type": "bool",
+        "label": "Log API Data in Console (disable/enable)",
         "required": false,
         "options": {
           "default": false
@@ -66,6 +68,7 @@
       {
         "key": "show-pois",
         "type": "bool",
+        "label": "Show nearby Points of Interest for Municipalities (disable/enable)",
         "required": false,
         "options": {
           "default": false
@@ -73,10 +76,14 @@
       },
       {
         "key": "poi-search-radius-in-m",
-        "type": "integer",
+        "type": "number",
+        "label": "Search radius for POI starting from a Municipality",
         "required": false,
         "options": {
-          "default": 1000
+          "default": 3000,
+          "min": 0,
+          "max": 10000,
+          "step": 1
         }
       }
     ]
