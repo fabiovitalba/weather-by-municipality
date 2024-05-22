@@ -4,12 +4,14 @@ SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
 SPDX-License-Identifier: CC0-1.0
 -->
 
-# day-trip-planner
+# Day Trip Planner
 This project is a webcomponent to display weather by municipality and hiking trails for the selected municipality.
 We started using the [webcomp-generic-map](https://github.com/noi-techpark/webcomp-generic-map) component provided by NOI Techpark and the [Open Data
 Hub](https://opendatahub.com).
 
 Our idea was to provide a simple webcomponent that can be used by hotels, bed and breakfasts and other tourism platforms. The component should help tourists (or locals) find hiking trails in the vicinity with information about the weather, to know if they can plan for a trail.
+
+_Note that this Repository is replaced by the repository [Webcomp Weather Municipality](https://github.com/noi-techpark/webcomp-weather-municipality) hosted by ODH.
 
 ## Table of contents
 
