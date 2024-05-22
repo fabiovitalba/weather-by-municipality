@@ -1,6 +1,10 @@
+// SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { html } from 'lit-element';
 import captions from "./captions";
-import { formatDateInLang } from "./utils";
+import { getWeekdayInLang } from "./utils";
 
 const munPopupContainer = (municipality, locale, language, day1, day2, day3) => {
     return html`
@@ -21,9 +25,9 @@ const munPopupTabs = (municipality, locale, language, day1, day2, day3) => {
         <div class="popup-body">
             <div class="tabs">
                 <button class="tablinks" data-tab=${tabIds[0]}>${captions.weatherForecast[language]}</button>
-                <button class="tablinks" data-tab=${tabIds[1]}>${formatDateInLang(day1, locale)}</button>
-                <button class="tablinks" data-tab=${tabIds[2]}>${formatDateInLang(day2, locale)}</button>
-                <button class="tablinks" data-tab=${tabIds[3]}>${formatDateInLang(day3, locale)}</button>
+                <button class="tablinks" data-tab=${tabIds[1]}>${getWeekdayInLang(day1, locale)}</button>
+                <button class="tablinks" data-tab=${tabIds[2]}>${getWeekdayInLang(day2, locale)}</button>
+                <button class="tablinks" data-tab=${tabIds[3]}>${getWeekdayInLang(day3, locale)}</button>
             </div>
             ${dailyForecastTabContent(tabIds[0], municipality.weatherForecast, locale, language)}
             ${hourlyForecastTabContent(tabIds[1], day1, municipality.hourlyForecast, locale, language)}
@@ -35,11 +39,10 @@ const munPopupTabs = (municipality, locale, language, day1, day2, day3) => {
 const dailyForecastTabContent = (tabId, dailyForecast, locale, language) => {
     return html`
         <div id=${tabId} class="tabcontent active">
-            <h4>${captions.weatherForecast[language]}</h4>
             <table>    
             ${dailyForecast.map(f => html`
                 <tr>
-                    <td>${formatDateInLang(f.Date, locale)}</td>
+                    <td>${getWeekdayInLang(f.Date, locale)}</td>
                     <td><img src=${f.WeatherImgUrl} /></td>
                     <td>${f.WeatherDesc}</td>
                 </tr>
@@ -51,7 +54,6 @@ const dailyForecastTabContent = (tabId, dailyForecast, locale, language) => {
 const hourlyForecastTabContent = (tabId, date, hourlyForecast, locale, language) => {
     return html`
         <div id=${tabId} class="tabcontent">
-            <h4>${captions.hourlyForecast[language].replace("{1}",formatDateInLang(date, locale))}</h4>
             <div class="forecast">
                 <div class="forecast-header">
                     <span>${captions.time[language]}</span><span>${captions.temperature[language]}</span><span>${captions.precipitationProb[language]}</span>

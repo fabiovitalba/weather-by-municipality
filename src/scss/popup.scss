@@ -54,26 +54,26 @@
 }
 
 .forecast {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .forecast-header,
 .forecast-row {
-display: flex;
-justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .forecast-header {
-font-weight: bold;
-margin-bottom: 5px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .forecast-row {
-margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .forecast-row span {
-flex: 1;
-text-align: center;
+  flex: 1;
+  text-align: center;
 }

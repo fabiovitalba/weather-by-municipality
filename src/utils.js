@@ -7,6 +7,14 @@ import { ODHActivityPoi } from "./api/enums";
 
 export const getStyle = array => array[0][1];
 
+export function getWeekdayInLang(date, locale = 'en-US') {
+    if (date instanceof Date) {
+        return date.toLocaleDateString(locale, { weekday: 'long' });
+    } else {
+        return (new Date(date)).toLocaleDateString(locale, { weekday: 'long' });
+    }
+}
+
 export function formatDateInLang(dateString, locale = 'en-US') {
     const date = new Date(dateString);
 
@@ -35,7 +43,7 @@ export function formatDateInLang(dateString, locale = 'en-US') {
     };
 
     // Get the day of the week and month
-    const dayOfWeek = date.toLocaleDateString(locale, { weekday: 'long' });
+    const dayOfWeek = getWeekdayInLang(date, locale);
     const month = monthNames[locale.slice(0,2)][date.getMonth()];
 
     // Get the year
