@@ -1,5 +1,5 @@
-import captions from "./captions";
-import { formatDateInLang } from "./utils";
+import { munPopupBuilder } from "./mun-popup-builder";
+import { convertLitHtmlToString } from './utils';
 
 export function addMunicipalitiesLayer(markers_list) {
     this.municipalities.map(municipality => {
@@ -16,89 +16,7 @@ export function addMunicipalitiesLayer(markers_list) {
         });
 
         /** Popup Window Content **/
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-        const dayAfterTomorrow = new Date(today);
-        dayAfterTomorrow.setDate(today.getDate() + 2);
-        const dayAfterDayAfterTomorrow = new Date(today);
-        dayAfterDayAfterTomorrow.setDate(today.getDate() + 3);
-
-        const formatDay = (date) => date.toLocaleDateString(this.locale, { weekday: 'long' });
-
-        let popupCont = `
-        <div class="popup">
-            <div class="popup-header">
-                <h3>${municipality.Plz} ${municipality.Shortname}</h3>
-            </div>
-            <div class="popup-body">
-                <div class="tabs">
-                    <button class="tablinks" data-tab="WeatherForecast">${captions.weatherForecast[this.language]}</button>
-                    <button class="tablinks" data-tab="HourlyForecastTomorrow">${formatDay(tomorrow)}</button>
-                    <button class="tablinks" data-tab="HourlyForecastDayAfterTomorrow">${formatDay(dayAfterTomorrow)}</button>
-                    <button class="tablinks" data-tab="HourlyForecastDayAfterDayAfterTomorrow">${formatDay(dayAfterDayAfterTomorrow)}</button>
-                </div>
-                <div id="WeatherForecast" class="tabcontent active">
-                    <h4>${captions.weatherForecast[this.language]}</h4>
-                    <table>
-                        <tr>${municipality.weatherForecast.map(f => `<td>${formatDateInLang(f.Date, this.locale)}</td>`).join('')}</tr>
-                        <tr>${municipality.weatherForecast.map(f => `<td><img src='${f.WeatherImgUrl}' /></td>`).join('')}</tr>
-                        <tr>${municipality.weatherForecast.map(f => `<td>${f.WeatherDesc}</td>`).join('')}</tr>
-                    </table>
-                </div>
-                <div id="HourlyForecastTomorrow" class="tabcontent">
-                    <h4>${captions.hourlyForecast[this.language].replace("{1}",formatDay(tomorrow))}</h4>
-                    <div class="forecast">
-                        <div class="forecast-header">
-                            <span>${captions.time[this.language]}</span><span>${captions.temperature[this.language]}</span><span>${captions.precipitationProb[this.language]}</span>
-                        </div>
-                        ${municipality.hourlyForecast
-                            .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === tomorrow.toLocaleDateString(this.locale))
-                            .map(f => `
-                                <div class="forecast-row">
-                                    <span>${new Date(f.Date).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit' })}</span>
-                                    <span>${f.Temperature}°C</span>
-                                    <span>${f.PrecipitationProbability}%</span>
-                                </div>
-                            `).join('')}
-                    </div>
-                </div>
-                <div id="HourlyForecastDayAfterTomorrow" class="tabcontent">
-                    <h4>${captions.hourlyForecast[this.language].replace("{1}",formatDay(dayAfterTomorrow))}</h4>
-                    <div class="forecast">
-                        <div class="forecast-header">
-                            <span>${captions.time[this.language]}</span><span>${captions.temperature[this.language]}</span><span>${captions.precipitationProb[this.language]}</span>
-                        </div>
-                        ${municipality.hourlyForecast
-                            .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === dayAfterTomorrow.toLocaleDateString(this.locale))
-                            .map(f => `
-                                <div class="forecast-row">
-                                    <span>${new Date(f.Date).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit' })}</span>
-                                    <span>${f.Temperature}°C</span>
-                                    <span>${f.PrecipitationProbability}%</span>
-                                </div>
-                            `).join('')}
-                    </div>
-                </div>
-                <div id="HourlyForecastDayAfterDayAfterTomorrow" class="tabcontent">
-                    <h4>${captions.hourlyForecast[this.language].replace("{1}",formatDay(dayAfterDayAfterTomorrow))}</h4>
-                    <div class="forecast">
-                        <div class="forecast-header">
-                            <span>${captions.time[this.language]}</span><span>${captions.temperature[this.language]}</span><span>${captions.precipitationProb[this.language]}</span>
-                        </div>
-                        ${municipality.hourlyForecast
-                            .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === dayAfterDayAfterTomorrow.toLocaleDateString(this.locale))
-                            .map(f => `
-                                <div class="forecast-row">
-                                    <span>${new Date(f.Date).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit' })}</span>
-                                    <span>${f.Temperature}°C</span>
-                                    <span>${f.PrecipitationProbability}%</span>
-                                </div>
-                            `).join('')}
-                    </div>
-                </div>
-            </div>
-        </div>`;
+        let popupCont = `${ convertLitHtmlToString(munPopupBuilder(this.locale,this.language,municipality)) }`;
 
         let popup = L.popup().setContent(popupCont);
 

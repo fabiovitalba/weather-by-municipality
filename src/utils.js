@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { render } from "lit-html";
 import { ODHActivityPoi } from "./api/enums";
 
 export const getStyle = array => array[0][1];
@@ -55,4 +56,12 @@ export function dateSeasonValue(date) {
     } else {
         return ODHActivityPoi.WINTER + ODHActivityPoi.SUMMER;
     }
+}
+
+export function convertLitHtmlToString(litHtmlTemplate) {
+    const tempDiv = document.createElement('div');
+    render(litHtmlTemplate,tempDiv);
+    const htmlTemplateAsString = tempDiv.innerHTML;
+    tempDiv.remove();
+    return htmlTemplateAsString;
 }
