@@ -147,7 +147,6 @@ export class MapWidget extends LitElement {
         ${getStyle(style__markercluster)}
         ${getStyle(style__leaflet)}
         ${getStyle(style)}
-        ${getStyle(popupStyle)} // Einbinden der neuen SCSS-Datei
       </style>
       <div id="map_widget">
         <div id="map" class="map"></div>

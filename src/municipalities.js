@@ -22,7 +22,9 @@ export function addMunicipalitiesLayer(markers_list) {
 
         let marker = L.marker(pos, {
             icon: icon,
-        }).bindPopup(popup);
+        }).bindPopup(popup, {
+            maxWidth: "auto",
+        });
 
         marker.on('click', async (e) => {
             const latlng = e.latlng;

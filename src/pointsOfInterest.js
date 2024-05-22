@@ -26,7 +26,10 @@ export function addPointsOfInterestLayer(markers_list) {
 
         let marker = L.marker(pos, {
             icon: icon,
-        }).bindPopup(popup);
+        }).bindPopup(popup, {
+            //maxWidth: "auto",
+            //minWidth: "301px",
+        });
 
         markers_list.push(marker);
     });
