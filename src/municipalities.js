@@ -1,3 +1,4 @@
+import captions from "./captions";
 import { formatDateInLang } from "./utils";
 
 export function addMunicipalitiesLayer(markers_list) {
@@ -32,13 +33,13 @@ export function addMunicipalitiesLayer(markers_list) {
             </div>
             <div class="popup-body">
                 <div class="tabs">
-                    <button class="tablinks" data-tab="WeatherForecast">Weather Forecast</button>
+                    <button class="tablinks" data-tab="WeatherForecast">${captions.weatherForecast[this.language]}</button>
                     <button class="tablinks" data-tab="HourlyForecastTomorrow">${formatDay(tomorrow)}</button>
                     <button class="tablinks" data-tab="HourlyForecastDayAfterTomorrow">${formatDay(dayAfterTomorrow)}</button>
                     <button class="tablinks" data-tab="HourlyForecastDayAfterDayAfterTomorrow">${formatDay(dayAfterDayAfterTomorrow)}</button>
                 </div>
                 <div id="WeatherForecast" class="tabcontent active">
-                    <h4>Weather Forecast</h4>
+                    <h4>${captions.weatherForecast[this.language]}</h4>
                     <table>
                         <tr>${municipality.weatherForecast.map(f => `<td>${formatDateInLang(f.Date, this.locale)}</td>`).join('')}</tr>
                         <tr>${municipality.weatherForecast.map(f => `<td><img src='${f.WeatherImgUrl}' /></td>`).join('')}</tr>
@@ -46,10 +47,10 @@ export function addMunicipalitiesLayer(markers_list) {
                     </table>
                 </div>
                 <div id="HourlyForecastTomorrow" class="tabcontent">
-                    <h4>Hourly Forecast (${formatDay(tomorrow)})</h4>
+                    <h4>${captions.hourlyForecast[this.language].replace("{1}",formatDay(tomorrow))}</h4>
                     <div class="forecast">
                         <div class="forecast-header">
-                            <span>Time</span><span>Temperature</span><span>Rain%</span>
+                            <span>${captions.time[this.language]}</span><span>${captions.temperature[this.language]}</span><span>${captions.precipitationProb[this.language]}</span>
                         </div>
                         ${municipality.hourlyForecast
                             .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === tomorrow.toLocaleDateString(this.locale))
@@ -63,10 +64,10 @@ export function addMunicipalitiesLayer(markers_list) {
                     </div>
                 </div>
                 <div id="HourlyForecastDayAfterTomorrow" class="tabcontent">
-                    <h4>Hourly Forecast (${formatDay(dayAfterTomorrow)})</h4>
+                    <h4>${captions.hourlyForecast[this.language].replace("{1}",formatDay(dayAfterTomorrow))}</h4>
                     <div class="forecast">
                         <div class="forecast-header">
-                            <span>Time</span><span>Temperature</span><span>Rain%</span>
+                            <span>${captions.time[this.language]}</span><span>${captions.temperature[this.language]}</span><span>${captions.precipitationProb[this.language]}</span>
                         </div>
                         ${municipality.hourlyForecast
                             .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === dayAfterTomorrow.toLocaleDateString(this.locale))
@@ -80,10 +81,10 @@ export function addMunicipalitiesLayer(markers_list) {
                     </div>
                 </div>
                 <div id="HourlyForecastDayAfterDayAfterTomorrow" class="tabcontent">
-                    <h4>Hourly Forecast (${formatDay(dayAfterDayAfterTomorrow)})</h4>
+                    <h4>${captions.hourlyForecast[this.language].replace("{1}",formatDay(dayAfterDayAfterTomorrow))}</h4>
                     <div class="forecast">
                         <div class="forecast-header">
-                            <span>Time</span><span>Temperature</span><span>Rain%</span>
+                            <span>${captions.time[this.language]}</span><span>${captions.temperature[this.language]}</span><span>${captions.precipitationProb[this.language]}</span>
                         </div>
                         ${municipality.hourlyForecast
                             .filter(f => new Date(f.Date).toLocaleDateString(this.locale) === dayAfterDayAfterTomorrow.toLocaleDateString(this.locale))
