@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # Development Plan
 ## 1. Development / Deployment on Docker
 * In order to release changes to the docker environment run: `docker-compose run --rm app /bin/bash -c "npm run build"`
