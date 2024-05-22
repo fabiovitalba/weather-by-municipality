@@ -62,6 +62,22 @@
         "options": {
           "default": false
         }
+      },
+      {
+        "key": "show-pois",
+        "type": "bool",
+        "required": false,
+        "options": {
+          "default": false
+        }
+      },
+      {
+        "key": "poi-search-radius-in-m",
+        "type": "integer",
+        "required": false,
+        "options": {
+          "default": 1000
+        }
       }
     ]
   }

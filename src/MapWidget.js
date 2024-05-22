@@ -23,6 +23,14 @@ export class MapWidget extends LitElement {
       logInfo: {
         type: Boolean,
         attribute: 'log-info'
+      },
+      showPOIs: {
+        type: Boolean,
+        attribute: 'show-pois'
+      },
+      poiSearchRadiusInM: {
+        type: Number,
+        attribute: 'poi-search-radius-in-m'
       }
     };
   }
@@ -36,11 +44,18 @@ export class MapWidget extends LitElement {
     this.map_layer = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
     this.map_attribution = '<a target="_blank" href="https://opendatahub.com">OpenDataHub.com</a> | &copy; <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a target="_blank" href="https://carto.com/attribution">CARTO</a>';
 
-    /* Internationalization */
-    this.language_default = 'en';
-    this.language = this.language_default;
+    /* Localization (Language & Region) */
     this.locale_default = 'en-US';
+    this.language_default = 'en';
     this.locale = this.locale_default;
+    this.language = this.language_default;
+
+    /* Feature Parameters */
+    this.enablePois = false;
+
+    /* API Parameters */
+    this.poi_search_radius_default = 1000;
+    this.poiSearchRadiusInM = this.poi_search_radius_default;
 
     /* Debugging Info */
     this.logDebugging = false;
@@ -50,13 +65,6 @@ export class MapWidget extends LitElement {
     this.weatherForecasts = [];
     this.pointsOfInterest = [];
     this.lastClickedLatLong = null;
-
-    this.colors = [
-      "green",
-      "blue",
-      "red",
-      "orange"
-    ];
 
     /* Requests */
     this.fetchMunicipalities = fetchMunicipalities.bind(this);
@@ -74,7 +82,9 @@ export class MapWidget extends LitElement {
   async initComponent() {
     this.language = this.langAndLocale ? this.langAndLocale.slice(0,2) : this.language_default;
     this.locale = this.langAndLocale;
-    this.logDebugging = this.logInfo ? this.logInfo : false;
+    this.logDebugging = this.logInfo ? this.logInfo === true : false;
+    this.enablePois = this.showPOIs ? this.showPOIs === true : false;
+    this.poiSearchRadiusInM = this.poiSearchRadiusInM ? this.poiSearchRadiusInM : this.poi_search_radius_default;
   }
 
   async initializeMap() {
@@ -100,13 +110,15 @@ export class MapWidget extends LitElement {
 
     let municipality_markers_list = [];
 
-    this.addMunicipalitiesLayer(municipality_markers_list);
+    this.addMunicipalitiesLayer(municipality_markers_list, this.enablePois, this.poiSearchRadiusInM);
   }
 
   async drawPoiMap() {
-    let poi_markers_list = [];
-    if (this.pointsOfInterest.length > 0)
-      this.addPointsOfInterestLayer(poi_markers_list);
+    if (this.enablePois) {
+      let poi_markers_list = [];
+      if (this.pointsOfInterest.length > 0)
+        this.addPointsOfInterestLayer(poi_markers_list);
+    }
   }
 
   async firstUpdated() {

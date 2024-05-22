@@ -12,7 +12,7 @@ export function addPointsOfInterestLayer(markers_list) {
         let fillChar = pointOfInterest.Id ? '👣' : '&nbsp;';
 
         let icon = L.divIcon({
-            html: '<div class="marker"><div style="background-color: #97be0e;">' + fillChar + '</div></div>',
+            html: '<div class="marker"><div style="background-color: gainsboro;">' + fillChar + '</div></div>',
             iconSize: L.point(25, 25)
         });
 
@@ -43,7 +43,7 @@ export function addPointsOfInterestLayer(markers_list) {
         chunkedLoading: true,
         iconCreateFunction: function (cluster) {
             return L.divIcon({
-                html: '<div class="poi_marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+                html: '<div class="marker"><div class="poi_marker_cluster__marker">' + cluster.getChildCount() + '</div></div>',
                 iconSize: L.point(36, 36)
             });
         }
