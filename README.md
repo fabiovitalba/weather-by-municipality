@@ -11,7 +11,7 @@ Hub](https://opendatahub.com).
 
 Our idea was to provide a simple webcomponent that can be used by hotels, bed and breakfasts and other tourism platforms. The component should help tourists (or locals) find hiking trails in the vicinity with information about the weather, to know if they can plan for a trail.
 
-_Note that this Repository is replaced by the repository [Webcomp Weather Municipality](https://github.com/noi-techpark/webcomp-weather-municipality) hosted by ODH.
+_Note that this Repository is replaced by the repository [Webcomp Weather Municipality](https://github.com/noi-techpark/webcomp-weather-municipality) hosted by ODH._
 
 ## Table of contents
 
@@ -37,30 +37,30 @@ Include the Javascript file `dist/day_trip_map_widget.min.js` in your HTML and d
 
 ### Attributes
 #### lang-and-locale
-Type: select
-Options: "en-US", "en-UK", "de-DE", "de-AT", "de-CH", "it-IT", "it-CH"
+Type: select\
+Options: "en-US", "en-UK", "de-DE", "de-AT", "de-CH", "it-IT", "it-CH"\
 Default: "en-US"
 
 #### municipality-id
-Type: text
+Type: text\
 Default: ""
 
 #### show-pois
-Type: boolean
-Options: true, false
-Default: false
+Type: boolean\
+Options: true, false\
+Default: false\
 _Simply omit this attribute if you do not wish to see any points of interest when clicking on a municipality._
 
 #### poi-search-radius-in-m
-Type: number
-Minimum: 0
-Maximum: 10000
+Type: number\
+Minimum: 0\
+Maximum: 10000\
 Default: 3000
 
 #### log-info
-Type: boolean
-Options: true, false
-Default: false
+Type: boolean\
+Options: true, false\
+Default: false\
 _Simply omit this attribute if you do not wish to see any logs in the console._
 
 ## Getting started
