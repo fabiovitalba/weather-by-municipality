@@ -28,7 +28,7 @@
     }
   ],
   "image": "wcs-logo.png",
-  "searchTags": ["map","hike","weather","municipality","municipalities","trip","day","forecast"],
+  "searchTags": ["map","hike","weather","municipality","municipalities","trip","day","forecast","wander"],
   "dist": {
     "basePath": "dist",
     "files": [
@@ -57,12 +57,12 @@
         }
       },
       {
-        "key": "log-info",
-        "type": "bool",
-        "label": "Log API Data in Console (disable/enable)",
+        "key": "municipality-id",
+        "type": "text",
+        "label": "If you want the map to be opened on a specific municipality, you need to provide its ID (from Open Data Hub) here.",
         "required": false,
         "options": {
-          "default": false
+          "default": ""
         }
       },
       {
@@ -84,6 +84,15 @@
           "min": 0,
           "max": 10000,
           "step": 1
+        }
+      },
+      {
+        "key": "log-info",
+        "type": "bool",
+        "label": "Log API Data in Console (disable/enable)",
+        "required": false,
+        "options": {
+          "default": false
         }
       }
     ]

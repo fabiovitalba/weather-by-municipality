@@ -40,6 +40,23 @@ export async function fetchMunicipalities(lang) {
     });
 }
 
+export async function fetchSingleMunicipality(lang, munId) {
+    return callTourismGet(`/Municipality/${munId}`, {
+        fields: "GpsInfo,Gpstype,Latitude,Longitude,Altitude,Shortname",
+        language: lang,
+        langfilter: lang,
+        distinct: true,
+        origin: config.ORIGIN
+    }, this.logDebugging)
+    .then(response => {
+        this.startMunicipality = response;
+    })
+    .catch(e => {
+        console.error(e)
+        throw e;
+    });
+}
+
 export async function fetchWeatherForecasts(lang) {
     return callTourismGet("/Weather/Forecast/", {
         fields: "LocationInfo,ForeCastDaily",
