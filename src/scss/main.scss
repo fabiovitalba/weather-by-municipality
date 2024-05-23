@@ -298,8 +298,8 @@ textarea:focus {
 }
 
 .muc_marker_cluster__marker {
-  background-color: $black;
-  color: $white;
+  background-color: lightblue;
+  color: #464646;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -310,8 +310,8 @@ textarea:focus {
 }
 
 .poi_marker_cluster__marker {
-  background-color: $green;
-  color: $white;
+  background-color: gainsboro;
+  color: #464646;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -322,12 +322,12 @@ textarea:focus {
 }
 
 .marker {
-  background-color: white;
+  background-color: #464646;
   border-radius: 50%;
   display: flex;
   align-items: center;
-  width: 26px;
-  height: 26px;
+  width: 36px;
+  height: 36px;
 }
 
 .marker :first-child {
@@ -338,24 +338,11 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  width: 20px;
-  height: 20px;
-
-  &.green {
-    background-color: $green;
-  }
-  &.blue {
-    background-color: $blue;
-  }
-  &.orange {
-    background-color: $orange;
-  }
-  &.red {
-    background-color: $red;
-  }
+  width: 32px;
+  height: 32px;
+  font-size: 1.4em;
 }
 
-/* TODO: until icon */
 .leaflet-div-icon {
   background-color: transparent;
   border: 0;

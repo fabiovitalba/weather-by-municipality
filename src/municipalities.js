@@ -5,7 +5,7 @@
 import captions from "./captions";
 import { formatDateInLang } from "./utils";
 
-export function addMunicipalitiesLayer(markers_list) {
+export function addMunicipalitiesLayer(markers_list, enablePois, poiSearchRadius) {
     this.municipalities.map(municipality => {
         const pos = [
             municipality.Latitude,
@@ -15,7 +15,7 @@ export function addMunicipalitiesLayer(markers_list) {
         let fillChar = municipality.Id ? '🏠' : '&nbsp;';
 
         let icon = L.divIcon({
-            html: '<div class="marker"><div style="background-color: black;">' + fillChar + '</div></div>',
+            html: '<div class="marker"><div style="background-color: lightblue;">' + fillChar + '</div></div>',
             iconSize: L.point(25, 25)
         });
 
@@ -55,7 +55,8 @@ export function addMunicipalitiesLayer(markers_list) {
             }
 
             // Fetch POI near selected Lat/Lon
-            await this.fetchPointsOfInterest(this.language, 1, 100, latlng.lat, latlng.lng, 1000, new Date());
+            if (enablePois)
+                await this.fetchPointsOfInterest(this.language, 1, 100, latlng.lat, latlng.lng, poiSearchRadius, new Date());
 
             // Redraw POI layer
             this.drawPoiMap();
@@ -76,7 +77,7 @@ export function addMunicipalitiesLayer(markers_list) {
         chunkedLoading: true,
         iconCreateFunction: function (cluster) {
             return L.divIcon({
-                html: '<div class="muc_marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+                html: '<div class="marker"><div class="muc_marker_cluster__marker">' + cluster.getChildCount() + '</div></div>',
                 iconSize: L.point(36, 36)
             });
         }

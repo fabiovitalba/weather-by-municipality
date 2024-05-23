@@ -1,7 +1,7 @@
 {
   "title": "Day Trip Planner",
-  "description": "A map that shows the weather and hiking trails for each municipality.",
-  "descriptionAbstract": "Map to show weather and hiking trails",
+  "description": "A webcomponent that shows municipalities and their weather forecast. Optionally show nearby hiking trails fitting the weather.",
+  "descriptionAbstract": "A webcomponent including weather forecast and hiking trails.",
   "license": "AGPL-3.0-or-later",
   "repositoryUrl": "https://github.com/fabiovitalba/weather-by-municipality.git",
   "shortName": "day-trip-planner",
@@ -28,7 +28,7 @@
     }
   ],
   "image": "wcs-logo.png",
-  "searchTags": ["map","hike","weather","municipality","municipalities","trip","day","forecast"],
+  "searchTags": ["map","hike","weather","municipality","municipalities","trip","day","forecast","wander"],
   "dist": {
     "basePath": "dist",
     "files": [
@@ -41,6 +41,7 @@
       {
         "key": "lang-and-locale",
         "type": "select",
+        "label": "Language and Date Format Settings",
         "required": false,
         "options": {
           "values": [
@@ -56,8 +57,39 @@
         }
       },
       {
+        "key": "municipality-id",
+        "type": "text",
+        "label": "If you want the map to be opened on a specific municipality, you need to provide its ID (from Open Data Hub) here.",
+        "required": false,
+        "options": {
+          "default": ""
+        }
+      },
+      {
+        "key": "show-pois",
+        "type": "bool",
+        "label": "Show nearby Points of Interest for Municipalities (disable/enable)",
+        "required": false,
+        "options": {
+          "default": false
+        }
+      },
+      {
+        "key": "poi-search-radius-in-m",
+        "type": "number",
+        "label": "Search radius for POI starting from a Municipality",
+        "required": false,
+        "options": {
+          "default": 3000,
+          "min": 0,
+          "max": 10000,
+          "step": 1
+        }
+      },
+      {
         "key": "log-info",
         "type": "bool",
+        "label": "Log API Data in Console (disable/enable)",
         "required": false,
         "options": {
           "default": false
