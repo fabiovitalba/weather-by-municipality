@@ -1,5 +1,5 @@
 .popup {
-  height: 400px;
+  height: 350px;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -71,9 +71,27 @@
 
 .forecast-row {
   margin-bottom: 5px;
+  border-bottom: 1px solid #eee; /* Add separator line between rows */
 }
 
+.forecast-header span,
 .forecast-row span {
   flex: 1;
   text-align: center;
+}
+
+/* Define specific width for each column to ensure consistent alignment */
+.forecast-header span:nth-child(1),
+.forecast-row span:nth-child(1) {
+  flex-basis: 33.33%;
+}
+
+.forecast-header span:nth-child(2),
+.forecast-row span:nth-child(2) {
+  flex-basis: 33.33%;
+}
+
+.forecast-header span:nth-child(3),
+.forecast-row span:nth-child(3) {
+  flex-basis: 33.33%;
 }
