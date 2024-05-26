@@ -1,12 +1,6 @@
-/*
- * SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
- *
- * SPDX-License-Identifier: AGPL-3.0-or-later
- */
-
- .popup {
-  width: 300px;
-  height: 350px;
+.popup {
+  width: 303px;
+  height: 400px;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -36,12 +30,13 @@
 }
 
 .tablinks {
-  padding: 6px 12px;
-  margin: 0 4px;
+  padding: 4px 8px;  // Verkleinere die Tabs
+  margin: 0 2px;     // Verringere den Abstand zwischen den Tabs
   cursor: pointer;
   background-color: #f1f1f1;
   border: none;
   border-radius: 4px;
+  font-size: 12px;   // Verringere die Schriftgröße
 }
 
 .tablinks.active, .tablinks:hover {
@@ -58,4 +53,27 @@
   display: block;
 }
 
-  
+.forecast {
+display: flex;
+flex-direction: column;
+}
+
+.forecast-header,
+.forecast-row {
+display: flex;
+justify-content: space-between;
+}
+
+.forecast-header {
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+.forecast-row {
+margin-bottom: 5px;
+}
+
+.forecast-row span {
+flex: 1;
+text-align: center;
+}

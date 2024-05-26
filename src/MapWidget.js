@@ -8,6 +8,7 @@ import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
 import style from './scss/main.scss';
+import popupStyle from './scss/popup.scss'; // Einbinden der neuen SCSS-Datei für das Popup
 import { getStyle } from './utils.js';
 import { fetchMunicipalities, fetchWeatherForecasts, fetchPointsOfInterest, fetchSingleMunicipality } from './api/ninjaApi.js';
 import { addPointsOfInterestLayer } from './pointsOfInterest.js';
@@ -144,6 +145,34 @@ export class MapWidget extends LitElement {
     this.initializeMap();
     this.drawMunicipalitiesMap();
     this.drawPoiMap();
+    this.addPopupTabs();
+  }
+
+  // functions for popup tabs
+  openTab(evt, tabName) {
+    const currentTarget = evt ? evt.currentTarget : this.shadowRoot.querySelector(`.tablinks[data-tab='${tabName}']`);
+    const tabcontent = this.shadowRoot.querySelectorAll(".tabcontent");
+    tabcontent.forEach(tc => tc.style.display = "none");
+    const tablinks = this.shadowRoot.querySelectorAll(".tablinks");
+    tablinks.forEach(tl => tl.classList.remove("active"));
+    this.shadowRoot.querySelector(`#${tabName}`).style.display = "block";
+    currentTarget.classList.add("active");
+  }
+
+  // Helper method for adding event listeners to the tab buttons
+  addPopupTabs() {
+    const buttons = this.shadowRoot.querySelectorAll(".tablinks");
+    if (buttons === null) return;
+
+    buttons.forEach(button => {
+      button.addEventListener('click', (e) => this.openTab(e, button.getAttribute('data-tab')));
+    });
+
+    // Activate the first tab by default
+    const firstTab = buttons[0];
+    if (firstTab) {
+      this.openTab({ currentTarget: firstTab }, firstTab.getAttribute('data-tab'));
+    }
   }
 
   render() {
@@ -152,6 +181,7 @@ export class MapWidget extends LitElement {
         ${getStyle(style__markercluster)}
         ${getStyle(style__leaflet)}
         ${getStyle(style)}
+        ${getStyle(popupStyle)} // Einbinden der neuen SCSS-Datei
       </style>
       <div id="map_widget">
         <div id="map" class="map"></div>

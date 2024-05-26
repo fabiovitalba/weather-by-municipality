@@ -59,7 +59,7 @@ export async function fetchSingleMunicipality(lang, munId) {
 
 export async function fetchWeatherForecasts(lang) {
     return callTourismGet("/Weather/Forecast/", {
-        fields: "LocationInfo,ForeCastDaily",
+        fields: "LocationInfo,ForeCastDaily,Forecast3HoursInterval",
         language: lang,
         langfilter: lang,
         distinct: true,
