@@ -76,10 +76,6 @@ const hourlyForecastRow = (forecast, locale) => {
 
 export const munPopupBuilder = (locale, language, municipality,) => {
     const today = new Date();
-
-    //addition to have data, there are currently errors at ODH.
-    today.setDate(today.getDate() - 4);
-
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
     const dayAfterTomorrow = new Date(today);
